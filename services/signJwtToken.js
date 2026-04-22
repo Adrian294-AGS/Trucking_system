@@ -1,0 +1,20 @@
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+export const userGenerateAccessToken = (input) => {
+    return jwt.sign(input, process.env.user_access_token, {expiresIn: "15m"});
+};
+
+export const userGenerateRefreshToken = (input) => {
+    return jwt.sign(input, process.env.user_refresh_token, {expiresIn: "7d"});
+};
+
+export const adminGenerateAccessToken = (input) => {
+     return jwt.sign(input, process.env.admin_access_token, {expiresIn: "15m"});
+};
+
+export const adminGenerateRefreshToken = (input) => {
+     return jwt.sign(input, process.env.admin_refresh_token, {expiresIn: "7d"});
+};

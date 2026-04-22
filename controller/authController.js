@@ -2,9 +2,15 @@ import {
   fetchUserForSignup,
   insertToDatabase,
   insertToUserLog,
-  fetchUserForLogin
+  fetchUserForLogin,
 } from "../model/sqlQuery.js";
 import bcrypt from "bcryptjs";
+import {
+  userGenerateAccessToken,
+  userGenerateRefreshToken,
+  adminGenerateAccessToken,
+  adminGenerateRefreshToken,
+} from "../services/signJwtToken.js";
 
 // Creating Account
 export const signUp = async (req, res) => {
@@ -55,20 +61,68 @@ export const signUp = async (req, res) => {
 // Sign In Account
 
 export const signIn = async (req, res) => {
-    const { email, password } = req.body;
-    
-    try {
-        const isEmailExist = await fetchUserForLogin(email);
-        if(!isEmailExist){
-  		return res.status(404).json({success: false, message: "Email Does not Exist. Sign Up first"}); 
-        }
-	let isPasswordMatched = bcrypt.compare(password, isEmailExist.password);
-	if(!isPasswordMatched){
-		return res.status(401).json({success: false, message: "Wrong Password Try Again"});
-	}
-	
-    } catch (error) {
-        console.log("Sign In Error: ", error);
-        return res.status(500).json({success: false, message: "Server Error"});
+  const { email, password } = req.body;
+
+  try {
+    const isEmailExist = await fetchUserForLogin(email);
+    if (!isEmailExist) {
+      return res.status(404).json({
+        success: false,
+        message: "Email Does not Exist. Sign Up first",
+      });
     }
-}
+    let isPasswordMatched = bcrypt.compare(password, isEmailExist.password);
+    if (!isPasswordMatched) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Wrong Password Try Again" });
+    }
+    if (isEmailExist.role == "Admin") {
+      const payload = {UID: isEmailExist.UID, email: isEmailExist.email, role: isEmailExist.role};
+      const [accessToken, refreshToken] = await Promise.all([
+        adminGenerateAccessToken(payload),
+        adminGenerateRefreshToken(payload),
+      ]);
+      res.cookie("accessToken", accessToken, {
+        httpOnly: true,
+        sameSite: "lax",
+        maxAge: 15 * 60 * 1000,
+      });
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        sameSite: "lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+      return res.status(200).json({
+        success: true,
+        role: isEmailExist.role,
+        message: "Success Sing In",
+      });
+    }
+    const payload = {UID: isEmailExist.UID, email: isEmailExist.email, role: isEmailExist.role};
+    const [accessToken, refreshToken] = await Promise.all([
+      userGenerateAccessToken(payload),
+      userGenerateRefreshToken(payload),
+    ]);
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    res.status(200).json({
+      success: true,
+      role: isEmailExist.role,
+      message: "Success Sing In",
+    });
+  } catch (error) {
+    console.log("Sign In Error: ", error);
+    return res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
