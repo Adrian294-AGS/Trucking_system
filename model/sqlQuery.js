@@ -35,7 +35,7 @@ export const fetchUserForSignup = async (username, email) => {
 };
 
 export const fetchUserForLogin = async (email) => {
-    const [result] = await db.query(`SELECT email, password, role FROM tbl_users WHERE email = ?`, [email]);
+    const [result] = await db.query(`SELECT UID, email, password, role FROM tbl_users WHERE email = ?`, [email]);
     return result[0];
 };
 

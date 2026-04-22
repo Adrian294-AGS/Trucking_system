@@ -60,8 +60,13 @@ export const signIn = async (req, res) => {
     try {
         const isEmailExist = await fetchUserForLogin(email);
         if(!isEmailExist){
-            
+  		return res.status(404).json({success: false, message: "Email Does not Exist. Sign Up first"}); 
         }
+	let isPasswordMatched = bcrypt.compare(password, isEmailExist.password);
+	if(!isPasswordMatched){
+		return res.status(401).json({success: false, message: "Wrong Password Try Again"});
+	}
+	
     } catch (error) {
         console.log("Sign In Error: ", error);
         return res.status(500).json({success: false, message: "Server Error"});
