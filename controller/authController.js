@@ -71,7 +71,7 @@ export const signIn = async (req, res) => {
         message: "Email Does not Exist. Sign Up first",
       });
     }
-    let isPasswordMatched = bcrypt.compare(password, isEmailExist.password);
+    let isPasswordMatched = await bcrypt.compare(password, isEmailExist.password);
     if (!isPasswordMatched) {
       return res
         .status(401)
@@ -94,13 +94,9 @@ export const signIn = async (req, res) => {
         sameSite: "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
-      return res.status(200).json({
-        success: true,
-        role: isEmailExist.role,
-        message: "Success Sing In",
-      });
+      return res.status(200).redirect(`/admin/adminAuth`);
     }
-    const payload = {UID: isEmailExist.UID, email: isEmailExist.email, role: isEmailExist.role};
+    const payload = {UID: isEmailExist.UID, email: isEmailExist.email};
     const [accessToken, refreshToken] = await Promise.all([
       userGenerateAccessToken(payload),
       userGenerateRefreshToken(payload),
@@ -119,10 +115,18 @@ export const signIn = async (req, res) => {
     res.status(200).json({
       success: true,
       role: isEmailExist.role,
-      message: "Success Sing In",
+      message: "Success Sing In"
     });
   } catch (error) {
     console.log("Sign In Error: ", error);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
+
+// logOUt part
+
+export const logOut = async (req, res) => {
+  res.clearCookie('accessToken');
+  res.clearCookie('refreshToken'); // must match cookie name
+  return res.status(200).json({ message: 'Logged out' });
+}

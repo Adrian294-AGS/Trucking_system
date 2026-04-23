@@ -1,6 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import authRoute from "../routes/authRoute.js";
+import adminAuthRoute from "../routes/adminAuthRoute.js";
 
 dotenv.config();
 const app = express();
