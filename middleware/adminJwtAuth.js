@@ -5,7 +5,8 @@ import { Namespace } from "socket.io";
 dotenv.config();
 
 export const jwtAdminAuthenticator = (req, res, next) => {
-    const accessToken = res.cookies.accessToken;
+    const token = req.headers.authorization || req.query.token;
+    const accessToken = token && token.split(" ")[1];
 
     if(!accessToken){return res.status(401).json({success: false, message: "Unauthorized Access; Invalid Token"})};
     try {
@@ -13,10 +14,14 @@ export const jwtAdminAuthenticator = (req, res, next) => {
         if(!decode){
             return res.status(401).json({success: false, message: "Unauthorized Access; Admin Only"});
         }
-        req.user = decode.UID;
+        req.user = {
+            accessToken: accessToken,
+            UID: decode.UID,
+            Role: decode.role
+        };
         next();
     } catch (error) {
         console.log("jwtUserAuthenticator Error: ", error);
-        return res.status(500).json({success: false, message: "Server Error"});
+        return res.status(401).json({success: false, message: "Unauthorized Access"});
     }
 }

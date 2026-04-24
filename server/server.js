@@ -14,7 +14,7 @@ app.use(cookieParser());
 
 app.use("/", authRoute);
 app.use("/admin", adminAuthRoute);
-app.use("/truck", truckRoute);
+// app.use("/truck", truckRoute);
 
 app.listen(port, () => {
   console.log("server running http://localhost:5000");

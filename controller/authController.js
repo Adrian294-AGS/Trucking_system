@@ -3,6 +3,7 @@ import {
   insertToDatabase,
   insertToUserLog,
   fetchUserForLogin,
+  fetchTotalTruckToDatabase,
 } from "../model/sqlQuery.js";
 import bcrypt from "bcryptjs";
 import {
@@ -26,7 +27,7 @@ export const signUp = async (req, res) => {
 
     if (password != confirmPassword) {
       return res
-        .status(200)
+        .status(401)
         .json({ success: false, message: "Passwrod do not Matched" });
     }
     let hashedPassword = await bcrypt.hash(password, 10);
@@ -71,41 +72,40 @@ export const signIn = async (req, res) => {
         message: "Email Does not Exist. Sign Up first",
       });
     }
-    let isPasswordMatched = await bcrypt.compare(password, isEmailExist.password);
+    let isPasswordMatched = await bcrypt.compare(
+      password,
+      isEmailExist.password,
+    );
     if (!isPasswordMatched) {
       return res
         .status(401)
         .json({ success: false, message: "Wrong Password Try Again" });
     }
     if (isEmailExist.role == "Admin") {
-      const payload = {UID: isEmailExist.UID, email: isEmailExist.email, role: isEmailExist.role};
+      const payload = {
+        UID: isEmailExist.UID,
+        email: isEmailExist.email,
+        role: isEmailExist.role,
+      };
       const [accessToken, refreshToken] = await Promise.all([
         adminGenerateAccessToken(payload),
         adminGenerateRefreshToken(payload),
       ]);
-      res.cookie("accessToken", accessToken, {
-        httpOnly: true,
-        sameSite: "lax",
-        maxAge: 15 * 60 * 1000,
-      });
 
+      const bearer = `Bearer ${accessToken}`;
+      
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         sameSite: "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
-      return res.status(200).redirect(`/admin/adminAuth`);
+      return res.status(200).redirect(`http://localhost:5000/admin/adminAuth?token=${bearer}`);
     }
-    const payload = {UID: isEmailExist.UID, email: isEmailExist.email};
+    const payload = { UID: isEmailExist.UID, email: isEmailExist.email };
     const [accessToken, refreshToken] = await Promise.all([
       userGenerateAccessToken(payload),
       userGenerateRefreshToken(payload),
     ]);
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      sameSite: "lax",
-      maxAge: 15 * 60 * 1000,
-    });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -115,7 +115,8 @@ export const signIn = async (req, res) => {
     res.status(200).json({
       success: true,
       role: isEmailExist.role,
-      message: "Success Sing In"
+      accessToken: accessToken,
+      message: "Success Sing In",
     });
   } catch (error) {
     console.log("Sign In Error: ", error);
@@ -124,9 +125,12 @@ export const signIn = async (req, res) => {
 };
 
 // logOUt part
-
 export const logOut = async (req, res) => {
-  res.clearCookie('accessToken');
-  res.clearCookie('refreshToken'); // must match cookie name
-  return res.status(200).json({ message: 'Logged out' });
-}
+  try {
+    res.clearCookie("refreshToken"); 
+    return res.status(200).json({ message: "Logged out" });
+  } catch (error) {
+    console.log("Log out Error: ", error);
+    return res.status(500).json({ success: false, message: "Server Error" });
+  }
+};

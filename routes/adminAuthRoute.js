@@ -4,6 +4,6 @@ import { adminAuth } from "../controller/adminController.js";
 
 const adminAuthRoute = express.Router();
 
-adminAuthRoute.post("/adminAuth", jwtAdminAuthenticator, adminAuth);
+adminAuthRoute.get("/adminAuth", jwtAdminAuthenticator, adminAuth);
 
 export default adminAuthRoute;

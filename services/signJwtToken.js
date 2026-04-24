@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const userGenerateAccessToken = (input) => {
-    return jwt.sign(input, process.env.user_access_token, {expiresIn: "15m"});
+    return jwt.sign(input, process.env.user_access_token, {expiresIn: "30m"});
 };
 
 export const userGenerateRefreshToken = (input) => {
@@ -12,7 +12,7 @@ export const userGenerateRefreshToken = (input) => {
 };
 
 export const adminGenerateAccessToken = (input) => {
-     return jwt.sign(input, process.env.admin_access_token, {expiresIn: "15m"});
+     return jwt.sign(input, process.env.admin_access_token, {expiresIn: "30m"});
 };
 
 export const adminGenerateRefreshToken = (input) => {
