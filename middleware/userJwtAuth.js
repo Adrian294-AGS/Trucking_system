@@ -1,11 +1,11 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { Namespace } from "socket.io";
 
 dotenv.config();
 
 export const jwtUserAuthenticator = (req, res, next) => {
-    const accessToken = res.cookies.accessToken;
+    const token = req.header.authorization;
+    const accessToken = token && token.split(" ")[1];
 
     if(!accessToken){return res.status(401).json({success: false, message: " Unauthorized Access; Invalid Token"})};
     try {
