@@ -1,0 +1,297 @@
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --red: #cc0000;
+    --dark-red: #990000;
+    --green: #2e7d32;
+    --dark-green: #1b5e20;
+    --navy: #1a2540;
+    --white: #ffffff;
+    --light-gray: #f4f4f4;
+    --text-dark: #1a1a1a;
+}
+
+body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--light-gray);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── NAVBAR ── */
+.navbar {
+    background: var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 32px;
+}
+
+.navbar .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.navbar .logo-icon img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+}
+
+.navbar .logo-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: white;
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+.navbar .logo-text span {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 4px;
+  font-family: 'Barlow', sans-serif;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-links a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 6px 14px;
+    border-radius: 3px;
+    transition: background 0.2s;
+}
+
+.nav-links a:hover { background: rgba(255,255,255,0.15); }
+.nav-links a.active { background: var(--white); color: var(--red); }
+
+.nav-cart {
+    background: var(--white);
+    color: var(--red);
+    border: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── MAIN CONTENT ── */
+.main-content {
+    flex: 1;
+    padding: 32px 48px 48px;
+}
+
+.page-title {
+    font-family: 'Barlow', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 24px;
+}
+
+/* ── RENT LAYOUT ── */
+.rent-layout {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+/* ── TRUCK PREVIEW CARD ── */
+.truck-preview {
+    width: 320px;
+    flex-shrink: 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--white);
+}
+
+.truck-preview-img {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: #ddd;
+}
+
+.truck-preview-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.truck-preview-info {
+    padding: 12px 14px 0;
+}
+
+.truck-preview-info .truck-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.truck-preview-info .truck-plate {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.truck-status {
+    background: var(--green);
+    color: var(--white);
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* ── RENT DETAILS CARD ── */
+.rent-details {
+    flex: 1;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: var(--white);
+    padding: 24px 28px;
+}
+
+.rent-details h2 {
+    font-family: 'Barlow', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+}
+
+/* ── FORM FIELDS ── */
+.field {
+    margin-bottom: 16px;
+}
+
+.field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+}
+
+/* date input wrapper */
+.date-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid #bbb;
+    border-radius: 3px;
+    overflow: hidden;
+    background: var(--white);
+}
+
+.date-wrapper input[type="date"] {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    outline: none;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    color: var(--text-dark);
+    background: transparent;
+}
+
+.date-wrapper .cal-icon {
+    padding: 8px 10px;
+    font-size: 16px;
+    background: var(--white);
+    color: #555;
+    border-left: 1px solid #bbb;
+}
+
+/* text inputs */
+.field input[type="text"],
+.field textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1.5px solid #bbb;
+    border-radius: 3px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    color: var(--text-dark);
+    outline: none;
+    transition: border-color 0.2s;
+    background: var(--white);
+}
+
+.field input[type="text"]:focus,
+.field textarea:focus {
+    border-color: var(--green);
+}
+
+.field input[type="text"]::placeholder,
+.field textarea::placeholder {
+    color: #aaa;
+}
+
+/* location input has gray background like wireframe */
+.field input.location-input {
+    background: #808080;
+    color: var(--white);
+    border-color: #808080;
+}
+
+.field input.location-input::placeholder { color: rgba(255,255,255,0.8); }
+.field input.location-input:focus { border-color: #555; background: #666; }
+
+.field textarea {
+    height: 110px;
+    resize: vertical;
+}
+
+/* ── RENT BUTTON ── */
+.btn-rent-submit {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: var(--green);
+    color: var(--white);
+    border: none;
+    border-radius: 3px;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s;
+}
+
+.btn-rent-submit:hover { background: var(--dark-green); }
+
+/* ── FOOTER ── */
+.footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 20px;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+.footer span { color: rgba(255,255,255,0.85); font-weight: 600; }
