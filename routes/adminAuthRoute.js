@@ -1,9 +1,10 @@
 import { jwtAdminAuthenticator } from "../middleware/adminJwtAuth.js";
 import express from "express";
-import { adminAuth } from "../controller/adminController.js";
+import { adminRedirectAuth, adminSignIn } from "../controller/adminController.js";
 
 const adminAuthRoute = express.Router();
 
-adminAuthRoute.get("/adminAuth", jwtAdminAuthenticator, adminAuth);
+adminAuthRoute.get("/adminRedirectAuth", jwtAdminAuthenticator, adminRedirectAuth);
+adminAuthRoute.post("/signIn", adminSignIn);
 
 export default adminAuthRoute;

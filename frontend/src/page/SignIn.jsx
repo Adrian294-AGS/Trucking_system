@@ -16,10 +16,23 @@ const [formData, setFormData] = useState({ email: '', password: '' });
     setIsLoading(true);
 
     try {
-      console.log('Login attempt:', formData);
-      // 🔹 Replace with your actual API call
+      const res = await fetch('/api/user/signIn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(formData),
+      });
+      const signInRes = await res.json();
+      if (!signInRes.success) {
+        alert(signInRes.message);
+        setError(signInRes.message);
+        setFormData({ email: '', password: '' });
+        return;
+      }
+      alert(signInRes.message);
     } catch (err) {
-      setError(err.message || 'Login failed. Please try again.');
+      console.log("Login error:", err);
+      setError('An error occurred during login.');
     } finally {
       setIsLoading(false);
     }

@@ -10,7 +10,7 @@ export default function SignUp() {
     password: "",
     confirm_password: "",
   });
-
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -25,16 +25,37 @@ export default function SignUp() {
 
     if (formData.password !== formData.confirm_password) {
       alert("Passwords do not match.");
+      setFormData({
+        ...formData,
+        password: "",
+        confirm_password: "",
+      });
       return;
     }
-
     setIsLoading(true);
     try {
-      // 🔹 Replace with your actual API call
-      console.log("Submitting signup data:", formData);
-      // await fetch('/api/auth/signup', { method: 'POST', body: JSON.stringify(formData) });
+      const res = await fetch("/api/user/signUp", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      const signUpRes = await res.json();
+      console.log("Sign Up Response:", signUpRes);
+      if(!signUpRes.success){
+        setError(signUpRes.message);
+        setFormData({
+          full_name: "",
+          email: "",
+          phone: "",
+          password: "",
+          confirm_password: ""
+        });
+        return;
+      }
+      alert(signUpRes.message);
     } catch (error) {
-      console.error("Signup failed:", error);
+      setError("An error occurred during signup.");
     } finally {
       setIsLoading(false);
     }
@@ -50,14 +71,14 @@ export default function SignUp() {
     });
   };
 
- 
-
   return (
     <div className="page active" id="page-signup">
       <div className="form-section">
         <div className="form-layout">
           <h1>Create an Account</h1>
           <p className="form-subtitle">Fill in the form below to register.</p>
+
+          {error && <div className="form-error">{error}</div>}
 
           <form id="signup-form" onSubmit={handleSubmit} onReset={handleReset}>
             <div className="field">

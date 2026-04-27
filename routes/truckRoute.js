@@ -7,3 +7,5 @@ const truckRoute = express.Router();
 truckRoute.get("/fetchAllTrucks", fetchAllTrucks);
 truckRoute.get("/availableTrucks", jwtUserAuthenticator, fetchAvailableTrucks);
 
+export default truckRoute;
+

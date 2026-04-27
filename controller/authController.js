@@ -15,27 +15,27 @@ import {
 
 // Creating Account
 export const signUp = async (req, res) => {
-  const { fullName, email, phoneNumber, password, confirmPassword } = req.body;
+  const { full_name, email, phone, password, confirm_password } = req.body;
 
   try {
-    const existingUser = await fetchUserForSignup(fullName, email);
+    const existingUser = await fetchUserForSignup(full_name, email);
     if (existingUser.length > 0) {
       return res
         .status(200)
         .json({ success: false, message: "Account Already Exists" });
     }
 
-    if (password != confirmPassword) {
+    if (password != confirm_password) {
       return res
         .status(401)
         .json({ success: false, message: "Passwrod do not Matched" });
     }
     let hashedPassword = await bcrypt.hash(password, 10);
     const userInput = {
-      username: fullName,
+      username: full_name,
       password: hashedPassword,
       email: email,
-      phone_number: phoneNumber,
+      phone_number: phone,
     };
 
     const insResult = await insertToDatabase("tbl_users", userInput);
@@ -47,7 +47,6 @@ export const signUp = async (req, res) => {
         action: "SignUp",
         status: "Success",
       };
-
       await insertToUserLog(log);
       return res
         .status(201)
@@ -99,7 +98,7 @@ export const signIn = async (req, res) => {
         sameSite: "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
-      return res.status(200).redirect(`http://localhost:5000/admin/adminAuth?token=${bearer}`);
+      return res.status(200).redirect(`http://localhost:5000/api/admin/adminRedirectAuth?token=${bearer}`);
     }
     const payload = { UID: isEmailExist.UID, email: isEmailExist.email };
     const [accessToken, refreshToken] = await Promise.all([

@@ -230,6 +230,67 @@ body {
   border: 1px solid #ffb3b3;
 }
 
+/* ── ADMIN NAVBAR VARIANT ── */
+.navbar.admin-nav {
+  background: #1a2540;
+}
+
+.navbar.admin-nav .user-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  color: white;
+  letter-spacing: 3px;
+  margin-left: 12px;
+}
+
+.restricted-label {
+  color: rgba(255,255,255,0.7);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  background: rgba(255,255,255,0.1);
+  padding: 6px 12px;
+  border-radius: 3px;
+}
+
+/* ── ADMIN FORM LAYOUT ── */
+.admin-slot {
+  text-align: center;
+}
+
+.admin-slot h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  color: #1a1a1a;
+}
+
+.admin-slot .form-subtitle {
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+/* ── ADMIN BUTTON ── */
+.btn-admin {
+  width: 100%;
+  padding: 11px;
+  background: #1a2540;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-family: 'Barlow', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  transition: background 0.2s;
+}
+.btn-admin:hover { background: #0f1828; }
+.btn-admin:disabled { opacity: 0.7; cursor: not-allowed; }
+
 /* ── FOOTER ── */
 .footer {
   background: #1a2540;

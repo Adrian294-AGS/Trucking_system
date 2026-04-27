@@ -8,7 +8,7 @@ export default function Navbar() {
   const links = [
     { id: "/", label: "Sign up" },
     { id: "/login", label: "Log in" },
-    { id: "admin", label: "Admin" },
+    { id: "/admin", label: "Admin" },
   ];
   return (
     <nav className="navbar client-nav">
@@ -26,7 +26,9 @@ export default function Navbar() {
                 <div
                   key={link.id}
                   className={active === link.id ? "active" : ""}
-                  onClick={() => setActive(link.id)}
+                  onClick={(e) => { 
+                    setActive(link.id);
+                  }}
                 >
                   <span>{link.label}</span>
                 </div>

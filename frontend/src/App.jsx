@@ -4,10 +4,11 @@ import Footer from "./components/Footer";
 import SignIn from "./page/SignIn";
 import SignUp from "./page/SignUp";
 import Navbar from "./components/Navbar";
+import AdminSignIn from "./page/AdminSignIn";
 
 function App() {
   return (
-    <div  style={{ height: "100vh", display: "flex", flexDirection: "column"  }}>
+    <div style={{ height: "100vh", display: "flex", flexDirection: "column"  }}>
     <BrowserRouter>
       <Navbar />
       <div  style={{
@@ -18,6 +19,7 @@ function App() {
       <Routes>
         <Route path="/" element={<SignUp />} />
         <Route path="/login" element={<SignIn />} />
+        <Route path="/admin" element={<AdminSignIn />} />
       </Routes>
       </div>
       <Footer />
