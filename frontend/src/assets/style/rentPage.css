@@ -1,0 +1,278 @@
+/* ── CSS VARIABLES (Design Tokens) ── */
+:root {
+  --primary-red: #cc0000;
+  --primary-red-dark: #990000;
+  --admin-blue: #1a2540;
+  --admin-blue-dark: #0f1828;
+  --success-green: #28a745;
+  --success-green-dark: #218838;
+  --text-dark: #1a1a1a;
+  --text-muted: #555;
+  --text-light: rgba(255,255,255,0.8);
+  --bg-light: #f4f4f4;
+  --bg-white: #ffffff;
+  --bg-input-gray: #808080;
+  --bg-input-gray-dark: #666;
+  --border-color: #ddd;
+  --border-color-dark: #bbb;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Barlow', sans-serif;
+  background: var(--bg-light);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ... [keep all existing navbar/footer/form styles from before] ... */
+
+/* ── RENT PAGE: MAIN CONTENT ── */
+.main-content {
+  flex: 1;
+  padding: 32px 48px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.page-title {
+  font-family: 'Barlow', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 24px;
+}
+
+/* ── RENT LAYOUT GRID ── */
+.rent-layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+/* ── TRUCK PREVIEW CARD ── */
+.truck-preview {
+  width: 320px;
+  flex-shrink: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--bg-white);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.truck-preview-img {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: #ddd;
+}
+
+.truck-preview-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.truck-preview-info {
+  padding: 12px 14px 0;
+}
+
+.truck-preview-info .truck-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+}
+
+.truck-preview-info .truck-plate {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.truck-status {
+  background: var(--success-green);
+  color: var(--bg-white);
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.truck-status.unavailable {
+  background: #dc3545;
+}
+
+/* ── RENT DETAILS CARD ── */
+.rent-details {
+  flex: 1;
+  min-width: 300px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--bg-white);
+  padding: 24px 28px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.rent-details h2 {
+  font-family: 'Barlow', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* ── FORM FIELDS ── */
+.field {
+  margin-bottom: 16px;
+}
+
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 5px;
+}
+
+/* date input wrapper */
+.date-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid var(--border-color-dark);
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--bg-white);
+  transition: border-color 0.2s;
+}
+
+.date-wrapper input[type="date"] {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  outline: none;
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  color: var(--text-dark);
+  background: transparent;
+  cursor: pointer;
+}
+
+
+.date-wrapper .cal-icon {
+  padding: 8px 10px;
+  font-size: 16px;
+  background: var(--bg-white);
+  color: var(--text-muted);
+  border-left: 1px solid var(--border-color-dark);
+  pointer-events: none;
+}
+
+.date-wrapper:focus-within {
+  border-color: var(--success-green);
+}
+
+/* text inputs */
+.field input[type="text"],
+.field textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1.5px solid var(--border-color-dark);
+  border-radius: 3px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color 0.2s;
+  background: var(--bg-white);
+}
+
+.field input[type="text"]:focus,
+.field textarea:focus {
+  border-color: var(--success-green);
+}
+
+.field input[type="text"]::placeholder,
+.field textarea::placeholder {
+  color: #aaa;
+}
+
+/* location input has gray background */
+.field input.location-input {
+  background: var(--bg-input-gray);
+  color: var(--bg-white);
+  border-color: var(--bg-input-gray);
+}
+
+.field input.location-input::placeholder { 
+  color: var(--text-light); 
+}
+
+.field input.location-input:focus { 
+  border-color: #555; 
+  background: var(--bg-input-gray-dark); 
+}
+
+.field textarea {
+  height: 110px;
+  resize: vertical;
+  font-family: 'Barlow', sans-serif;
+}
+
+/* ── RENT BUTTON ── */
+.btn-rent-submit {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: var(--success-green);
+  color: var(--bg-white);
+  border: none;
+  border-radius: 3px;
+  font-family: 'Barlow', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+
+.btn-rent-submit:hover { 
+  background: var(--success-green-dark); 
+}
+
+.btn-rent-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .rent-layout {
+    flex-direction: column;
+  }
+  
+  .truck-preview {
+    width: 100%;
+  }
+  
+  .main-content {
+    padding: 24px 20px 32px;
+  }
+}

@@ -291,6 +291,8 @@ body {
 .btn-admin:hover { background: #0f1828; }
 .btn-admin:disabled { opacity: 0.7; cursor: not-allowed; }
 
+
+
 /* ── FOOTER ── */
 .footer {
   background: #1a2540;

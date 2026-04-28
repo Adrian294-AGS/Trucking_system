@@ -41,7 +41,6 @@ export default function SignUp() {
       });
 
       const signUpRes = await res.json();
-      console.log("Sign Up Response:", signUpRes);
       if(!signUpRes.success){
         setError(signUpRes.message);
         setFormData({
@@ -83,7 +82,7 @@ export default function SignUp() {
           <form id="signup-form" onSubmit={handleSubmit} onReset={handleReset}>
             <div className="field">
               <label htmlFor="signup-name">Full Name</label>
-              <input
+              <input style={{backgroundColor: "#666", color: "#fff"}}
                 type="text"
                 id="signup-name"
                 name="full_name"
@@ -157,7 +156,7 @@ export default function SignUp() {
 
           <p className="switch-link">
             Already have an account?{" "}
-            <Link to={"/login"}>
+            <Link to={"/login"} onClick={(e) => {localStorage.setItem("navbarChanged", "/login");}}>
               Log in here
             </Link>
           </p>

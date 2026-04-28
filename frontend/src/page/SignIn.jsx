@@ -24,7 +24,6 @@ const [formData, setFormData] = useState({ email: '', password: '' });
       });
       const signInRes = await res.json();
       if (!signInRes.success) {
-        alert(signInRes.message);
         setError(signInRes.message);
         setFormData({ email: '', password: '' });
         return;

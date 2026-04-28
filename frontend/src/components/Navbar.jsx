@@ -4,12 +4,12 @@ import truckingLogo from "@/assets/ssk_trucking_white.png";
 import { useState, useEffect } from "react";
 
 export default function Navbar() {
-  const [active, setActive] = useState("/");
+  const [active, setActive] = useState();
   const links = [
     { id: "/", label: "Sign up" },
     { id: "/login", label: "Log in" },
     { id: "/admin", label: "Admin" },
-  ];
+  ]; 
   return (
     <nav className="navbar client-nav">
       <div className="nav-content">
@@ -22,7 +22,7 @@ export default function Navbar() {
 
         <div className="nav-links">
           {links.map((link) => (
-              <Link to={link.id}>
+              <Link key={link.id} to={link.id}>
                 <div
                   key={link.id}
                   className={active === link.id ? "active" : ""}

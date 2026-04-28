@@ -19,7 +19,6 @@ app.use(express.json());
 app.use(express.static("upload"));
 app.use(cookieParser());
 
-
 app.use("/api/user", authRoute);
 app.use("/api/admin", adminAuthRoute);
 app.use("/api/truck", truckRoute);

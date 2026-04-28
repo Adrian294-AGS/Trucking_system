@@ -43,7 +43,7 @@ export const adminSignIn = async (req, res) => {
       maxAge:  7 * 24 * 60 * 60 * 1000
     });
 
-    return res.status(200).json({success: true, accessToken: accessToken, role: admin.role});
+    return res.status(200).json({success: true, accessToken: accessToken, role: admin.role, message: "Successfully Loged In"});
   } catch (error) {
     console.log("AdminSignIn ERROR: ", error);
     return res.status(500).json({success: false, message: "Server Error"});

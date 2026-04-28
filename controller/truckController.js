@@ -6,7 +6,6 @@ import {
 } from "../model/sqlQuery.js";
 
 // fetching all trucks for the preview page
-
 export const fetchAllTrucks = async (req, res) => {
   try {
     const [totalTruck, available, inMaintenance, unavailable] =

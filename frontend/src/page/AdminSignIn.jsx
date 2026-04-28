@@ -1,37 +1,49 @@
-import React from 'react'
-import { useState } from 'react';
+import React from "react";
+import { useState } from "react";
 
 export default function AdminSignIn() {
   const [formData, setFormData] = useState({
-    email: '',
-    admin_password: ''
+    email: "",
+    admin_password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setIsLoading(true);
 
     try {
-      console.log('Admin login attempt:', formData);
-      // 🔹 Replace with your actual admin auth API call
-      // const res = await fetch('/api/auth/admin/login', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(formData)
-      // });
-      // if (!res.ok) throw new Error('Invalid admin credentials');
+      const res = await fetch("/api/admin/signin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(formData),
+      });
+
+      const result = await res.json();
+
+      if (!result.success) {
+        setFormData({ email: "", admin_password: "" });
+        setError(result.message || "Admin login failed. Please try again.");
+        return;
+      };
+
+      alert(result.message);
     } catch (err) {
-      setError(err.message || 'Admin login failed. Please check your credentials.');
+      setError(
+        err.message || "Admin login failed. Please check your credentials.",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -43,7 +55,8 @@ export default function AdminSignIn() {
         <div className="form-layout admin-slot">
           <h1>ADMIN ACCESS ONLY</h1>
           <p className="form-subtitle">
-            This page is for authorized administrators only.<br />
+            This page is for authorized administrators only.
+            <br />
             Unauthorized access is prohibited.
           </p>
 
@@ -76,13 +89,19 @@ export default function AdminSignIn() {
             </div>
 
             <button type="submit" className="btn-admin" disabled={isLoading}>
-              {isLoading ? 'Authenticating...' : 'Log In as Admin'}
+              {isLoading ? "Authenticating..." : "Log In as Admin"}
             </button>
           </form>
 
           <p className="switch-link">
-            Not an Admin?{' '}
-            <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('login'); }}>
+            Not an Admin?{" "}
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                onNavigate("login");
+              }}
+            >
               Go to Customer Login
             </a>
           </p>
