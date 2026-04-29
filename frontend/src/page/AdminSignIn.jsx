@@ -1,7 +1,10 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 export default function AdminSignIn() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     admin_password: "",
@@ -38,7 +41,7 @@ export default function AdminSignIn() {
         setError(result.message || "Admin login failed. Please try again.");
         return;
       };
-
+      navigate("/home");
       alert(result.message);
     } catch (err) {
       setError(
@@ -50,7 +53,9 @@ export default function AdminSignIn() {
   };
 
   return (
-    <main className="page">
+   <div>
+    <Navbar />
+     <main className="page">
       <div className="form-section">
         <div className="form-layout admin-slot">
           <h1>ADMIN ACCESS ONLY</h1>
@@ -108,5 +113,6 @@ export default function AdminSignIn() {
         </div>
       </div>
     </main>
+   </div>
   );
 }

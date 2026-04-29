@@ -1,8 +1,10 @@
 import React from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 export default function SignUp() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     full_name: "",
     email: "",
@@ -36,22 +38,23 @@ export default function SignUp() {
     try {
       const res = await fetch("/api/user/signUp", {
         method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
 
       const signUpRes = await res.json();
-      if(!signUpRes.success){
+      if (!signUpRes.success) {
         setError(signUpRes.message);
         setFormData({
           full_name: "",
           email: "",
           phone: "",
           password: "",
-          confirm_password: ""
+          confirm_password: "",
         });
         return;
       }
+      navigate("/login");
       alert(signUpRes.message);
     } catch (error) {
       setError("An error occurred during signup.");
@@ -71,95 +74,108 @@ export default function SignUp() {
   };
 
   return (
-    <div className="page active" id="page-signup">
-      <div className="form-section">
-        <div className="form-layout">
-          <h1>Create an Account</h1>
-          <p className="form-subtitle">Fill in the form below to register.</p>
+    <div>
+      <Navbar />
+      <div className="page active" id="page-signup">
+        <div className="form-section">
+          <div className="form-layout">
+            <h1>Create an Account</h1>
+            <p className="form-subtitle">Fill in the form below to register.</p>
 
-          {error && <div className="form-error">{error}</div>}
+            {error && <div className="form-error">{error}</div>}
 
-          <form id="signup-form" onSubmit={handleSubmit} onReset={handleReset}>
-            <div className="field">
-              <label htmlFor="signup-name">Full Name</label>
-              <input style={{backgroundColor: "#666", color: "#fff"}}
-                type="text"
-                id="signup-name"
-                name="full_name"
-                value={formData.full_name}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <form
+              id="signup-form"
+              onSubmit={handleSubmit}
+              onReset={handleReset}
+            >
+              <div className="field">
+                <label htmlFor="signup-name">Full Name</label>
+                <input
+                  style={{ backgroundColor: "#666", color: "#fff" }}
+                  type="text"
+                  id="signup-name"
+                  name="full_name"
+                  value={formData.full_name}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="signup-email">Email Address</label>
-              <input
-                type="email"
-                id="signup-email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
+              <div className="field">
+                <label htmlFor="signup-email">Email Address</label>
+                <input
+                  type="email"
+                  id="signup-email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="signup-phone">Phone Number</label>
-              <input
-                type="tel"
-                id="signup-phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-              />
-            </div>
+              <div className="field">
+                <label htmlFor="signup-phone">Phone Number</label>
+                <input
+                  type="tel"
+                  id="signup-phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="signup-password">Password</label>
-              <input
-                type="password"
-                id="signup-password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
+              <div className="field">
+                <label htmlFor="signup-password">Password</label>
+                <input
+                  type="password"
+                  id="signup-password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
 
-            <div className="field">
-              <label htmlFor="signup-confirm">Confirm Password</label>
-              <input
-                type="password"
-                id="signup-confirm"
-                name="confirm_password"
-                value={formData.confirm_password}
-                onChange={handleChange}
-                required
-              />
-            </div>
+              <div className="field">
+                <label htmlFor="signup-confirm">Confirm Password</label>
+                <input
+                  type="password"
+                  id="signup-confirm"
+                  name="confirm_password"
+                  value={formData.confirm_password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
 
-            <div className="btn-row">
-              <button
-                type="submit"
-                className="btn-primary"
-                disabled={isLoading}
+              <div className="btn-row">
+                <button
+                  type="submit"
+                  className="btn-primary"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Registering..." : "Register"}
+                </button>
+                <button type="reset" className="btn-secondary">
+                  Cancel
+                </button>
+              </div>
+            </form>
+
+            <p className="switch-link">
+              Already have an account?{" "}
+              <Link
+                to={"/login"}
+                onClick={(e) => {
+                  localStorage.setItem("navbarChanged", "/login");
+                }}
               >
-                {isLoading ? "Registering..." : "Register"}
-              </button>
-              <button type="reset" className="btn-secondary">
-                Cancel
-              </button>
-            </div>
-          </form>
-
-          <p className="switch-link">
-            Already have an account?{" "}
-            <Link to={"/login"} onClick={(e) => {localStorage.setItem("navbarChanged", "/login");}}>
-              Log in here
-            </Link>
-          </p>
+                Log in here
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

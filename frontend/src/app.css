@@ -1,18 +1,61 @@
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ═══════════════════════════════════════════════════════════
+   🎨 SSK TRUCKING - GLOBAL STYLES
+   ═══════════════════════════════════════════════════════════ */
 
-body {
-  font-family: 'Barlow', sans-serif;
-  background: #f4f4f4;
+/* ── DESIGN TOKENS ── */
+:root {
+  --primary-red: #cc0000;
+  --primary-red-dark: #990000;
+  --admin-blue: #1a2540;
+  --admin-blue-dark: #0f1828;
+  --success-green: #28a745;
+  --success-green-dark: #218838;
+  --yellow: #e6a800;
+  --navy: #1a2540;
+  --text-dark: #1a1a1a;
+  --text-muted: #555;
+  --text-light: rgba(255, 255, 255, 0.8);
+  --bg-light: #f4f4f4;
+  --bg-white: #ffffff;
+  --bg-input-gray: #808080;
+  --bg-input-gray-dark: #666;
+  --border-color: #ddd;
+  --border-color-dark: #bbb;
 }
 
+/* ── RESET & BASE ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  scrollbar-gutter: stable;
+}
+body {
+  font-family: "Barlow", sans-serif;
+  background: var(--bg-light);
+  color: var(--text-dark);
+  min-height: 100vh;
+}
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 
 /* ── NAVBAR ── */
 .navbar {
-  background: #cc0000;
+  background: var(--primary-red);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px 32px;
+}
+.navbar.admin-nav {
+  background: var(--admin-blue);
 }
 
 .nav-content {
@@ -20,15 +63,14 @@ body {
   align-items: center;
   gap: 12px;
   width: 100%;
+  justify-content: space-between;
 }
-
-.navbar .logo {
+.logo {
   display: flex;
   align-items: center;
   gap: 10px;
   text-decoration: none;
 }
-
 .logo-icon {
   width: 72px;
   height: 72px;
@@ -37,15 +79,30 @@ body {
   align-items: center;
   justify-content: center;
 }
-
 .nav-logo-img {
   width: 80px;
   height: 80px;
   object-fit: contain;
 }
+.nav-logo-img-home {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
+.user-title {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 26px;
+  color: white;
+  letter-spacing: 3px;
+  margin-left: 12px;
+}
 
-.nav-links { display: flex; align-items: center; gap: 12px; margin-left: auto; }
-
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
 .nav-links a {
   color: white;
   text-decoration: none;
@@ -55,39 +112,52 @@ body {
   border-radius: 3px;
   transition: background 0.2s;
 }
-
-.nav-links span{
-    font-size: 16px;
-    font-weight: 600;
-    
+.nav-links a:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
-.nav-links span:hover { color:  #1a2540;}
-.nav-links .active { background: rgb(252, 252, 252); color: #cc0000; padding: 5px; border-radius: 5px;}
-
-.navbar.admin-nav { background: #1a2540; }
-
-.user-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 26px;
+.nav-links a.active {
+  background: white;
+  color: var(--primary-red);
+}
+.nav-links span {
+  font-size: 16px;
+  font-weight: 600;
   color: white;
-  letter-spacing: 3px;
-  margin-left: 12px;
 }
-
+.nav-links span:hover {
+  color: var(--admin-blue);
+}
+.nav-cart {
+  background: white;
+  color: var(--primary-red);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-weight: 600;
+}
 .restricted-label {
-  color: rgba(255,255,255,0.7);
+  color: rgba(255, 255, 255, 0.7);
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 6px 12px;
+  border-radius: 3px;
 }
 
-/* ── PAGE / MAIN CONTENT ── */
+/* ── PAGE LAYOUTS ── */
 .page {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
-
 .form-section {
   flex: 1;
   display: flex;
@@ -95,106 +165,204 @@ body {
   justify-content: center;
   padding: 40px 20px;
 }
-
 .form-layout {
-  background: white;
-  border: 1px solid #ddd;
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   padding: 40px 48px;
   width: 100%;
   max-width: 520px;
 }
-
 .form-layout h1 {
   font-size: 34px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--text-dark);
   margin-bottom: 4px;
 }
-
 .form-subtitle {
   font-size: 14px;
-  color: #555;
+  color: var(--text-muted);
   margin-bottom: 24px;
 }
-
-.admin-slot { text-align: center; }
+.admin-slot {
+  text-align: center;
+}
 .admin-slot h1 {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: "Bebas Neue", sans-serif;
   font-size: 26px;
   letter-spacing: 2px;
   margin-bottom: 8px;
+  color: var(--text-dark);
 }
-.admin-slot .form-subtitle { line-height: 1.6; }
+.admin-slot .form-subtitle {
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
 
 /* ── FORM FIELDS ── */
-.field { margin-bottom: 16px; text-align: left; }
-
+.field {
+  margin-bottom: 16px;
+  text-align: left;
+}
 .field label {
   display: block;
   font-size: 14px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text-dark);
   margin-bottom: 5px;
 }
-
 .field input {
   width: 100%;
   padding: 10px 14px;
-  background: #808080;
+  background: var(--bg-input-gray);
   border: none;
   border-radius: 3px;
   font-size: 14px;
   color: white;
-  font-family: 'Barlow', sans-serif;
+  font-family: inherit;
   outline: none;
   transition: background 0.2s;
 }
-.field input::placeholder { color: rgba(255,255,255,0.8); }
-.field input:focus { background: #666; }
+.field input::placeholder {
+  color: var(--text-light);
+}
+.field input:focus {
+  background: var(--bg-input-gray-dark);
+}
+
+.field input[type="text"],
+.field textarea {
+  background: var(--bg-white);
+  color: var(--text-dark);
+  border: 1.5px solid var(--border-color-dark);
+  padding: 8px 12px;
+}
+.field input[type="text"]:focus,
+.field textarea:focus {
+  border-color: var(--success-green);
+  background: var(--bg-white);
+}
+.field input[type="text"]::placeholder,
+.field textarea::placeholder {
+  color: #aaa;
+}
+.field input.location-input {
+  background: var(--bg-input-gray);
+  color: var(--bg-white);
+  border-color: var(--bg-input-gray);
+}
+.field input.location-input::placeholder {
+  color: var(--text-light);
+}
+.field input.location-input:focus {
+  border-color: #555;
+  background: var(--bg-input-gray-dark);
+}
+.field textarea {
+  height: 110px;
+  resize: vertical;
+}
+
+/* ── DATE PICKER ── */
+.date-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid var(--border-color-dark);
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--bg-white);
+  transition: border-color 0.2s;
+}
+.date-wrapper input[type="date"] {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text-dark);
+  background: transparent;
+  cursor: pointer;
+}
+.date-wrapper .cal-icon {
+  padding: 8px 10px;
+  font-size: 16px;
+  background: var(--bg-white);
+  color: var(--text-muted);
+  border-left: 1px solid var(--border-color-dark);
+  pointer-events: none;
+}
+.date-wrapper:focus-within {
+  border-color: var(--success-green);
+}
+.date-preview {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  animation: fadeIn 0.2s ease-in;
+}
+.date-preview strong {
+  color: var(--text-dark);
+  font-weight: 600;
+  margin-left: 4px;
+}
 
 /* ── BUTTONS ── */
-.btn-row { display: flex; gap: 14px; margin-top: 10px; margin-bottom: 20px; }
-
+.btn-row {
+  display: flex;
+  gap: 14px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
 .btn-primary {
   flex: 1;
   padding: 11px;
-  background: #cc0000;
+  background: var(--primary-red);
   color: white;
-  border: 2px solid #cc0000;
+  border: 2px solid var(--primary-red);
   border-radius: 3px;
-  font-family: 'Barlow', sans-serif;
+  font-family: inherit;
   font-weight: 700;
   font-size: 15px;
   cursor: pointer;
   transition: background 0.2s;
 }
-.btn-primary:hover { background: #990000; border-color: #990000; }
-.btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+.btn-primary:hover {
+  background: var(--primary-red-dark);
+  border-color: var(--primary-red-dark);
+}
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
 
 .btn-secondary {
   flex: 1;
   padding: 11px;
-  background: white;
-  color: #1a1a1a;
-  border: 2px solid #aaa;
+  background: var(--bg-white);
+  color: var(--text-dark);
+  border: 2px solid var(--border-color-dark);
   border-radius: 3px;
-  font-family: 'Barlow', sans-serif;
+  font-family: inherit;
   font-weight: 700;
   font-size: 15px;
   cursor: pointer;
   transition: background 0.2s;
 }
-.btn-secondary:hover { background: #f0f0f0; }
+.btn-secondary:hover {
+  background: #f0f0f0;
+}
 
 .btn-admin {
   width: 100%;
   padding: 11px;
-  background: #1a2540;
+  background: var(--admin-blue);
   color: white;
   border: none;
   border-radius: 3px;
-  font-family: 'Barlow', sans-serif;
+  font-family: inherit;
   font-weight: 700;
   font-size: 15px;
   cursor: pointer;
@@ -202,25 +370,74 @@ body {
   margin-bottom: 16px;
   transition: background 0.2s;
 }
-.btn-admin:hover { background: #0f1828; }
+.btn-admin:hover {
+  background: var(--admin-blue-dark);
+}
+.btn-admin:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-rent-submit {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: var(--success-green);
+  color: var(--bg-white);
+  border: none;
+  border-radius: 3px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+.btn-rent-submit:hover {
+  background: var(--success-green-dark);
+}
+.btn-rent-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-rent {
+  background: var(--primary-red);
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 1px;
+  border-radius: 3px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background 0.2s;
+}
+.btn-rent:hover {
+  background: var(--primary-red-dark);
+}
 
 /* ── LINKS & ERRORS ── */
 .switch-link {
   font-size: 14px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text-dark);
   text-align: center;
 }
 .switch-link a {
-  color: #cc0000;
+  color: var(--primary-red);
   font-weight: 700;
   text-decoration: none;
 }
-.switch-link a:hover { text-decoration: underline; }
-
+.switch-link a:hover {
+  text-decoration: underline;
+}
 .form-error {
   background: #ffe6e6;
-  color: #cc0000;
+  color: var(--primary-red);
   padding: 10px;
   border-radius: 4px;
   margin-bottom: 16px;
@@ -230,77 +447,498 @@ body {
   border: 1px solid #ffb3b3;
 }
 
-/* ── ADMIN NAVBAR VARIANT ── */
-.navbar.admin-nav {
-  background: #1a2540;
+/* ── HOME PAGE ── */
+.banner {
+  position: relative;
+  background:
+    linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.72) 40%,
+      rgba(0, 0, 0, 0.25) 100%
+    ),
+    url("../src/assets/truck-highway-sunny-sky.jpg") center/cover no-repeat;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  padding: 40px 32px 56px;
 }
-
-.navbar.admin-nav .user-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 26px;
+.banner-content h1 {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 52px;
   color: white;
-  letter-spacing: 3px;
-  margin-left: 12px;
-}
-
-.restricted-label {
-  color: rgba(255,255,255,0.7);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  background: rgba(255,255,255,0.1);
-  padding: 6px 12px;
-  border-radius: 3px;
-}
-
-/* ── ADMIN FORM LAYOUT ── */
-.admin-slot {
-  text-align: center;
-}
-
-.admin-slot h1 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 26px;
   letter-spacing: 2px;
-  margin-bottom: 8px;
-  color: #1a1a1a;
+  line-height: 1;
+  margin-bottom: 48%;
 }
 
-.admin-slot .form-subtitle {
+.stats-bar {
+  background: var(--navy);
+  display: flex;
+  justify-content: space-around;
+  padding: 18px 32px;
+}
+.stat-item {
   text-align: center;
-  line-height: 1.6;
-  margin-bottom: 32px;
-}
-
-/* ── ADMIN BUTTON ── */
-.btn-admin {
-  width: 100%;
-  padding: 11px;
-  background: #1a2540;
   color: white;
-  border: none;
-  border-radius: 3px;
-  font-family: 'Barlow', sans-serif;
-  font-weight: 700;
-  font-size: 15px;
-  cursor: pointer;
-  margin-top: 6px;
-  margin-bottom: 16px;
-  transition: background 0.2s;
 }
-.btn-admin:hover { background: #0f1828; }
-.btn-admin:disabled { opacity: 0.7; cursor: not-allowed; }
+.stat-number {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 40px;
+  color: var(--primary-red);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 2px;
+}
 
+.main-content {
+  flex: 1;
+  padding: 32px 48px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+.page-title {
+  font-family: "Barlow", sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 24px;
+}
+.section-title {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 28px;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+  color: var(--text-dark);
+}
 
+.status-row {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 28px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.status-col {
+  flex: 1;
+  min-width: 300px;
+  max-width: 450px;
+}
+.status-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.badge-yellow {
+  background: var(--yellow);
+  color: white;
+}
+.badge-red {
+  background: var(--primary-red);
+  color: white;
+}
+.badge-green {
+  background: var(--success-green);
+  color: white;
+}
+
+.truck-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+.truck-grid-2col {
+  grid-template-columns: repeat(2, 1fr) !important;
+}
+.truck-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.truck-slot {
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  cursor: pointer;
+}
+.truck-slot:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+.truck-slot.maintenance {
+  border-top: 4px solid var(--yellow);
+}
+.truck-slot.unavailable {
+  border-top: 4px solid var(--primary-red);
+}
+.truck-slot.available {
+  border-top: 4px solid var(--success-green);
+}
+.slot-header {
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: white;
+}
+.truck-slot.maintenance .slot-header {
+  background: var(--yellow);
+}
+.truck-slot.unavailable .slot-header {
+  background: var(--primary-red);
+}
+.truck-slot.available .slot-header {
+  background: var(--success-green);
+}
+.truck-img {
+  width: 100%;
+  height: 90px;
+  overflow: hidden;
+  background: #ddd;
+}
+.truck-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.slot-footer {
+  background: var(--bg-white);
+  padding: 6px 10px;
+  font-size: 12px;
+  color: #555;
+  font-weight: 500;
+}
+
+/* ── RENT PAGE ── */
+.rent-layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.truck-preview {
+  width: 320px;
+  flex-shrink: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--bg-white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.truck-preview-img {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: #ddd;
+}
+.truck-preview-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.truck-preview-info {
+  padding: 12px 14px 0;
+}
+.truck-preview-info .truck-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+}
+.truck-preview-info .truck-plate {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.truck-status {
+  background: var(--success-green);
+  color: var(--bg-white);
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+.truck-status.unavailable {
+  background: #dc3545;
+}
+.rent-details {
+  flex: 1;
+  min-width: 300px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--bg-white);
+  padding: 24px 28px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.rent-details h2 {
+  font-family: "Barlow", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
 
 /* ── FOOTER ── */
 .footer {
-  background: #1a2540;
-  color: rgba(255,255,255,0.6);
+  background: var(--navy);
+  color: rgba(255, 255, 255, 0.6);
   text-align: center;
   padding: 20px;
   font-size: 13px;
   letter-spacing: 0.5px;
   margin-top: auto;
 }
-.footer span { color: rgba(255,255,255,0.85); font-weight: 600; }
+.footer span {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 600;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 12px 16px;
+    flex-wrap: wrap;
+  }
+  .nav-links {
+    gap: 12px;
+  }
+  .nav-links a {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+  .banner {
+    min-height: 180px;
+    padding: 30px 16px 40px;
+  }
+  .banner-content h1 {
+    font-size: 36px;
+    margin-bottom: 14px;
+  }
+  .btn-rent {
+    padding: 10px 24px;
+    font-size: 14px;
+  }
+  .stats-bar {
+    padding: 14px 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .stat-item {
+    flex: 1;
+    min-width: 120px;
+  }
+  .stat-number {
+    font-size: 28px;
+  }
+  .main-content {
+    padding: 20px 16px 36px;
+  }
+  .section-title {
+    font-size: 22px;
+  }
+  .truck-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-width: 100%;
+  }
+  .status-row {
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+  }
+  .status-col {
+    width: 100%;
+  }
+  .rent-layout {
+    flex-direction: column;
+  }
+  .truck-preview {
+    width: 100%;
+  }
+}
+@media (max-width: 480px) {
+  .navbar {
+    padding: 10px 12px;
+  }
+  .nav-links {
+    gap: 8px;
+    width: 100%;
+    margin-top: 8px;
+  }
+  .nav-links a {
+    font-size: 11px;
+    padding: 4px 8px;
+    flex: 1;
+    text-align: center;
+  }
+  .nav-cart {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+  .banner {
+    min-height: 140px;
+    padding: 20px 12px 30px;
+  }
+  .banner-content h1 {
+    font-size: 24px;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .btn-rent {
+    padding: 9px 20px;
+    font-size: 13px;
+  }
+  .stats-bar {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+  .stat-item {
+    flex: 1;
+    min-width: 70px;
+  }
+  .stat-number {
+    font-size: 20px;
+  }
+  .stat-label {
+    font-size: 10px;
+  }
+  .main-content {
+    padding: 16px 12px 28px;
+  }
+  .section-title {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+  .truck-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    max-width: 100%;
+    width: fit-content;
+  }
+  .status-badge {
+    padding: 3px 10px;
+    font-size: 11px;
+    margin-bottom: 12px;
+  }
+  .slot-header {
+    padding: 5px 8px;
+    font-size: 10px;
+  }
+  .truck-img {
+    height: 70px;
+  }
+  .slot-footer {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+  .footer {
+    padding: 16px 12px;
+    font-size: 12px;
+  }
+}
+@media (max-width: 360px) {
+  .banner-content h1 {
+    font-size: 20px;
+  }
+  .stat-number {
+    font-size: 18px;
+  }
+  .truck-grid {
+    gap: 8px;
+  }
+  .btn-rent {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+}
+
+/* ── TRUCK LISTING PAGE ── */
+.status {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  color: var(--text-dark);
+}
+
+.truck-slot {
+  display: flex;
+  flex-direction: column;
+}
+
+.truck-slot .truck-img {
+  height: 130px;
+  flex-shrink: 0;
+}
+
+.truck-info {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--bg-white);
+}
+
+.info-row {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.info-row strong { color: var(--text-dark); font-weight: 600; }
+
+.rent-button {
+  width: 100%;
+  padding: 9px;
+  margin-top: 8px;
+  background: var(--success-green);
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-family: 'Barlow', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.rent-button:hover { background: var(--success-green-dark); }
+.rent-button:active { transform: scale(0.98); }

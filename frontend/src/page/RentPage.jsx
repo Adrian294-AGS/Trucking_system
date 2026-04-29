@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import "@/assets/style/rentPage.css";
+import HomeNavbar from "../components/HomeNavbar";
 
 export default function RentPage() {
   const [formData, setFormData] = useState({
@@ -67,6 +68,8 @@ export default function RentPage() {
   };
 
   return (
+   <div>
+     <HomeNavbar />
     <main className="page">
       <div className="main-content">
         <h1 className="page-title">Rent a truck</h1>
@@ -170,5 +173,6 @@ export default function RentPage() {
         </div>
       </div>
     </main>
+   </div>
   );
 }

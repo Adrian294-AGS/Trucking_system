@@ -1,8 +1,11 @@
 import React from 'react'
 import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 
 export default function SignIn() {
-const [formData, setFormData] = useState({ email: '', password: '' });
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -28,6 +31,7 @@ const [formData, setFormData] = useState({ email: '', password: '' });
         setFormData({ email: '', password: '' });
         return;
       }
+      navigate("/home");
       alert(signInRes.message);
     } catch (err) {
       console.log("Login error:", err);
@@ -38,7 +42,9 @@ const [formData, setFormData] = useState({ email: '', password: '' });
   };
 
   return (
-    <main className="page">
+   <div>
+    <Navbar />
+     <main className="page">
       <div className="form-section">
         <div className="form-layout">
           <h1>Log in</h1>
@@ -80,12 +86,11 @@ const [formData, setFormData] = useState({ email: '', password: '' });
 
           <p className="switch-link">
             No account yet?{' '}
-            <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('signup'); }}>
-              Register here
-            </a>
+            <Link to="/">Register here</Link>
           </p>
         </div>
       </div>
     </main>
+   </div>
   );
 }

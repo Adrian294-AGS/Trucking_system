@@ -3,9 +3,10 @@ import "./app.css";
 import Footer from "./components/Footer";
 import SignIn from "./page/SignIn";
 import SignUp from "./page/SignUp";
-import Navbar from "./components/Navbar";
 import AdminSignIn from "./page/AdminSignIn";
 import RentPage from "./page/RentPage";
+import Home from "./page/Home";
+import Truck from "./page/Truck";
 
 function App() {
   return (
@@ -14,7 +15,6 @@ function App() {
         style={{ height: "100vh", display: "flex", flexDirection: "column" }}
       >
         <BrowserRouter>
-          <Navbar />
           <div
             style={{
               flex: 1,
@@ -27,6 +27,8 @@ function App() {
               <Route path="/login" element={<SignIn />} />
               <Route path="/admin" element={<AdminSignIn />} />
               <Route path="/rent" element={<RentPage />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/trucks" element={<Truck />} />
             </Routes>
           </div>
         </BrowserRouter>
