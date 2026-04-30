@@ -1,11 +1,10 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { Namespace } from "socket.io";
 
 dotenv.config();
 
 export const jwtAdminAuthenticator = (req, res, next) => {
-    const token = req.headers.authorization || req.query.token;
+    const token = req.headers.authorization;
     const accessToken = token && token.split(" ")[1];
 
     if(!accessToken){return res.status(401).json({success: false, message: "Unauthorized Access; Invalid Token"})};

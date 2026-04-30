@@ -1,10 +1,10 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
-const UserAuthContext = createContext();
+const AdminAuthContext = createContext();
 
-export const UserAuthProvider = ({ children }) => {
+export default function AdminAuthProvider({ children }) {
   const [accessToken, setAccessToken] = useState("");
-  const [user, setUser] = useState({
+  const [admin, setadmin] = useState({
     username: "",
     email: "",
     photo: "",
@@ -15,7 +15,7 @@ export const UserAuthProvider = ({ children }) => {
   const logInAuth = async (token) => {
     setAccessToken(token);
     try {
-      const res = await fetch("/api/user/getUserInfo", {
+      const res = await fetch("/api/admin/getUserInfo", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -23,18 +23,18 @@ export const UserAuthProvider = ({ children }) => {
         credentials: "include",
       });
 
-      const userInfo = await res.json();
+      const adminInfo = await res.json();
 
-      if (!userInfo.success) {
-        alert(userInfo.message);
+      if (!adminInfo.success) {
+        alert(adminInfo.message);
         return;
       }
       setUser({
-        username: userInfo.username,
-        photo: userInfo.photo,
-        role: userInfo.role,
-        email: userInfo.email,
-        phoneNumber: userInfo.phoneNumber,
+        username: adminInfo.username,
+        photo: adminInfo.photo,
+        role: adminInfo.role,
+        email: adminInfo.email,
+        phoneNumber: adminInfo.phoneNumber,
       });
     } catch (error) {
       console.log("logInAuth ERROR: ", error);
@@ -43,7 +43,7 @@ export const UserAuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      const res = await fetch("/api/user/logOut", {
+      const res = await fetch("/api/admin/logOut", {
         method: "POST",
         credentials: "include",
       });
@@ -61,12 +61,12 @@ export const UserAuthProvider = ({ children }) => {
 
   const refreshToken = async () => {
     try {
-      const res = await fetch("/api/user/getToken", {
+      const res = await fetch("/api/admin/getToken", {
         method: "GET",
-        credentials: "include"
+        credentials: "include",
       });
       const result = await res.json();
-      if(!result.success){
+      if (!result.success) {
         alert(result.message);
         return;
       }
@@ -74,21 +74,20 @@ export const UserAuthProvider = ({ children }) => {
     } catch (error) {
       console.log("RefreshToken ERROR: ", error);
     }
-  }
+  };
 
   useEffect(() => {
-    if(accessToken){
+    if (accessToken) {
       logInAuth(accessToken);
     } else {
       refreshToken();
     }
   }, [accessToken]);
-
   return (
-    <UserAuthContext.Provider value={{ user, logInAuth, logout, accessToken}}>
+    <AdminAuthContext.Provider value={{ admin, logInAuth, accessToken, logout }}>
       {children}
-    </UserAuthContext.Provider>
+    </AdminAuthContext.Provider>
   );
-};
+}
 
-export const useUserAuth = () => useContext(UserAuthContext);
+export const useAdminAuth = () => useContext(AdminAuthContext);

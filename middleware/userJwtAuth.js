@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const jwtUserAuthenticator = (req, res, next) => {
-    const token = req.header.authorization;
+    const token = req.headers.authorization;
     const accessToken = token && token.split(" ")[1];
 
     if(!accessToken){return res.status(401).json({success: false, message: " Unauthorized Access; Invalid Token"})};

@@ -2,8 +2,10 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { useAdminAuth } from "../context/AdminAuthProvider";
 
 export default function AdminSignIn() {
+  const {logInAuth} = useAdminAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -25,7 +27,7 @@ export default function AdminSignIn() {
     setIsLoading(true);
 
     try {
-      const res = await fetch("/api/admin/signin", {
+      const res = await fetch("/api/admin/signIn", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -41,6 +43,7 @@ export default function AdminSignIn() {
         setError(result.message || "Admin login failed. Please try again.");
         return;
       };
+      await logInAuth(result.accessToken);
       navigate("/home");
       alert(result.message);
     } catch (err) {

@@ -3,9 +3,11 @@ import { useState } from "react";
 import HomeNavbar from "../components/HomeNavbar";
 import truckingLogo from "@/assets/truck-highway-sunny-sky.jpg";
 import { useNavigate } from "react-router-dom";
+import { UserAuthProvider, useUserAuth } from "../context/UserAuthContext";
 
 export default function Truck() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { accessToken } = useUserAuth();
   const [trucks, setTrucks] = useState([
     { id: 1, brand: "Isuzu", type: "Wing Van" },
     { id: 2, brand: "Hino", type: "Dump Truck" },
@@ -19,10 +21,9 @@ export default function Truck() {
 
   const handleRent = (id) => {
     console.log("Initiating rent flow for truck:", id);
-    navigate("/rent");
   };
 
-  return (
+  return accessToken ? (
     <div>
       <HomeNavbar />
       <main className="page">
@@ -46,12 +47,15 @@ export default function Truck() {
                   <div className="info-row">
                     <strong>Type:</strong> {truck.type}
                   </div>
-                  <button
-                    className="rent-button"
-                    onClick={() => handleRent(truck.id)}
-                  >
-                    RENT
-                  </button>
+                  <a target="_blank" href="/rent">
+                    <button
+                      targget="_blank"
+                      className="rent-button"
+                      onClick={() => handleRent(truck.id)}
+                    >
+                      RENT
+                    </button>
+                  </a>
                 </div>
               </div>
             ))}
@@ -59,5 +63,7 @@ export default function Truck() {
         </div>
       </main>
     </div>
+  ) : (
+    <div>No Content</div>
   );
 }

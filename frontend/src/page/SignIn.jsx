@@ -2,9 +2,11 @@ import React from 'react'
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import { useUserAuth } from '../context/UserAuthContext';
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const {logInAuth} = useUserAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -31,6 +33,7 @@ export default function SignIn() {
         setFormData({ email: '', password: '' });
         return;
       }
+      await logInAuth(signInRes.accessToken)
       navigate("/home");
       alert(signInRes.message);
     } catch (err) {
