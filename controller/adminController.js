@@ -111,7 +111,6 @@ export const adminInfo = async (req, res) => {
 // Getting a Access Token
 export const refreshToken = async (req, res) => {
   const token = req.cookies.refreshToken;
-
   if(!token){return res.status(401).json({success: false, message: "Unauthorized Access; Invalid Token"})};
   try {
     const admin = jwt.verify(token, process.env.admin_refresh_token);
