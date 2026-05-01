@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
-
-const UserAuthContext = createContext();
+import Navbar from "../components/Navbar";
+export const UserAuthContext = createContext();
 
 export const UserAuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState("");
@@ -12,8 +12,7 @@ export const UserAuthProvider = ({ children }) => {
     phoneNumber: "",
   });
 
-  const logInAuth = async (token) => {
-    setAccessToken(token);
+  const fetchUserInfo = async (token) => {
     try {
       const res = await fetch("/api/user/getUserInfo", {
         method: "GET",
@@ -39,6 +38,11 @@ export const UserAuthProvider = ({ children }) => {
     } catch (error) {
       console.log("logInAuth ERROR: ", error);
     }
+  }
+
+  const logInAuth = async (token) => {
+    setAccessToken(token);
+    await fetchUserInfo(token);
   };
 
   const logout = async () => {
@@ -49,40 +53,29 @@ export const UserAuthProvider = ({ children }) => {
       });
 
       const result = await res.json();
-      if (!result.success) {
-        alert(result.message);
-        return;
-      }
       alert(result.message);
     } catch (error) {
       console.log("logOut ERROR: ", error);
     }
   };
 
-  const refreshToken = async () => {
-    try {
+  useEffect(() => {
+    const getToken = async () => {
+      try {
       const res = await fetch("/api/user/getToken", {
         method: "GET",
         credentials: "include"
       });
       const result = await res.json();
-      if(!result.success){
-        alert(result.message);
-        return;
-      }
-      setAccessToken(result.accessToken);
+      const token = result.accessToken;
+      setAccessToken(token);
+      await fetchUserInfo(token);
     } catch (error) {
       console.log("RefreshToken ERROR: ", error);
     }
-  }
-
-  useEffect(() => {
-    if(accessToken){
-      logInAuth(accessToken);
-    } else {
-      refreshToken();
     }
-  }, [accessToken]);
+    getToken();
+  }, []);
 
   return (
     <UserAuthContext.Provider value={{ user, logInAuth, logout, accessToken}}>
@@ -91,4 +84,3 @@ export const UserAuthProvider = ({ children }) => {
   );
 };
 
-export const useUserAuth = () => useContext(UserAuthContext);

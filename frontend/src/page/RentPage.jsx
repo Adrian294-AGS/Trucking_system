@@ -2,8 +2,12 @@ import React from "react";
 import { useState } from "react";
 import "@/assets/style/rentPage.css";
 import HomeNavbar from "../components/HomeNavbar";
+import { useUserAuth } from "../hooks/useUserAuth";
+import { useNavigate } from "react-router-dom";
 
 export default function RentPage() {
+  const navigate = useNavigate();
+  const {accessToken} = useUserAuth();
   const [formData, setFormData] = useState({
     pickup_date: "",
     return_date: "",
@@ -54,6 +58,9 @@ export default function RentPage() {
       setSuccess(
         "🎉 Truck reserved successfully! Check your email for confirmation.",
       );
+      navigate("/success", {state: {clientName: 'Alexandrie Abon',
+    truck: { brand: 'Isuzu', plate: '000-11-ABC', year: '2021', type: 'Wing van', fuel: 'Diesel' }}});
+ 
       setFormData({
         pickup_date: "",
         return_date: "",
@@ -68,7 +75,8 @@ export default function RentPage() {
   };
 
   return (
-   <div>
+   accessToken ? (
+    <div>
      <HomeNavbar />
     <main className="page">
       <div className="main-content">
@@ -174,5 +182,10 @@ export default function RentPage() {
       </div>
     </main>
    </div>
+   ):(
+    <div>
+      NO CONTENT YET
+    </div>
+   )
   );
 }

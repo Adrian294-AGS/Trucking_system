@@ -2,7 +2,6 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import authRoute from "../routes/authRoute.js";
-import adminAuthRoute from "../routes/adminAuthRoute.js";
 import truckRoute from "../routes/truckRoute.js";
 import cors from "cors";
 
@@ -20,7 +19,6 @@ app.use(express.static("upload"));
 app.use(cookieParser());
 
 app.use("/api/user", authRoute);
-app.use("/api/admin", adminAuthRoute);
 app.use("/api/truck", truckRoute);
 
 app.listen(port, () => {

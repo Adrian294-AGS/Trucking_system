@@ -10,11 +10,3 @@ export const userGenerateAccessToken = (input) => {
 export const userGenerateRefreshToken = (input) => {
     return jwt.sign(input, process.env.user_refresh_token, {expiresIn: "7d"});
 };
-
-export const adminGenerateAccessToken = (input) => {
-     return jwt.sign(input, process.env.admin_access_token, {expiresIn: "30m"});
-};
-
-export const adminGenerateRefreshToken = (input) => {
-     return jwt.sign(input, process.env.admin_refresh_token, {expiresIn: "7d"});
-};

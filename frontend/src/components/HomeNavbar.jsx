@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import truckingLogo from "@/assets/ssk_trucking_white.png";
 import { useState, useEffect } from "react";
 
-export default function HomeNavbar() {
+export default function HomeNavbar({username, photo}) {
   const [active, setActive] = useState();
   const navItems = [
     { id: "trucks", label: "Trucks", path: "/trucks" },
@@ -20,7 +20,6 @@ export default function HomeNavbar() {
       setActive("contact");
     };
   }, []);
-
 
   return (
     <div>

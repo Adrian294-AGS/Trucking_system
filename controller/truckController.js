@@ -1,28 +1,19 @@
 import {
   fetchTotalTruckToDatabase,
-  fetchAvailableTruck,
-  fetchInMaintenanceTruck,
-  fetchUnavailableTruck,
+  fetchAvailableTruck
 } from "../model/sqlQuery.js";
 
 // fetching all trucks for the preview page
 export const fetchAllTrucks = async (req, res) => {
   try {
-    const [totalTruck, available, inMaintenance, unavailable] =
-      await Promise.all([
-        fetchTotalTruckToDatabase,
-        fetchAvailableTruck,
-        fetchInMaintenanceTruck,
-        fetchUnavailableTruck,
-      ]);
-    
+    const totalTruck = await fetchTotalTruckToDatabase();
+    if(!totalTruck){
+      return res.status(404).json({success: false, message: "No Trucks Stored"});
+    }
     return res.status(200).json({
         success: true,
-        totalVehicle: totalTruck.length,
-        available,
-        inMaintenance,
-        unavailable
-    })
+        trucks: totalTruck
+    });
   } catch (error) {
     console.log("fetchAllTrucks Error: ", error);
     return res.status(500).json({ success: false, message: "Server Error" });

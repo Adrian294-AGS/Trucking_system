@@ -8,9 +8,7 @@ import {
 import bcrypt from "bcryptjs";
 import {
   userGenerateAccessToken,
-  userGenerateRefreshToken,
-  adminGenerateAccessToken,
-  adminGenerateRefreshToken,
+  userGenerateRefreshToken
 } from "../services/signJwtToken.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -84,7 +82,7 @@ export const signIn = async (req, res) => {
         .status(401)
         .json({ success: false, message: "Wrong Password Try Again" });
     }
-    const payload = { UID: isEmailExist.UID, email: isEmailExist.email };
+    const payload = { UID: isEmailExist.UID, email: isEmailExist.email, role: isEmailExist.role};
     const [accessToken, refreshToken] = await Promise.all([
       userGenerateAccessToken(payload),
       userGenerateRefreshToken(payload),
@@ -132,6 +130,6 @@ export const refreshToken = async (req, res) => {
     const accessToken = await userGenerateAccessToken(payload);
     return res.status(200).json({success: true, accessToken});
   } catch (error) {
-    console.log("refreshToken ERROR: ", error);
+    console.log("USER refreshToken ERROR: ", error);
   }
 };

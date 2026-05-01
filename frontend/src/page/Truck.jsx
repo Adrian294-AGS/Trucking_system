@@ -3,7 +3,7 @@ import { useState } from "react";
 import HomeNavbar from "../components/HomeNavbar";
 import truckingLogo from "@/assets/truck-highway-sunny-sky.jpg";
 import { useNavigate } from "react-router-dom";
-import { UserAuthProvider, useUserAuth } from "../context/UserAuthContext";
+import { useUserAuth } from "../hooks/useUserAuth";
 
 export default function Truck() {
   const navigate = useNavigate();
@@ -21,7 +21,8 @@ export default function Truck() {
 
   const handleRent = (id) => {
     console.log("Initiating rent flow for truck:", id);
-  };
+    navigate("/rent");
+    };
 
   return accessToken ? (
     <div>
@@ -47,15 +48,15 @@ export default function Truck() {
                   <div className="info-row">
                     <strong>Type:</strong> {truck.type}
                   </div>
-                  <a target="_blank" href="/rent">
+                  
                     <button
-                      targget="_blank"
+                      target="_blank"
                       className="rent-button"
                       onClick={() => handleRent(truck.id)}
                     >
                       RENT
                     </button>
-                  </a>
+               
                 </div>
               </div>
             ))}

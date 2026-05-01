@@ -2,7 +2,7 @@ import { fetchUserInfo } from "../model/sqlQuery.js";
 
 // getting user info
 export const userInfo = async (req, res) => {
-  const UID = req.user;
+  const {UID} = req.user;
   try {
     const user = await fetchUserInfo(UID);
     if (!user) {

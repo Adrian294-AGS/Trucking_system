@@ -1,11 +1,15 @@
 import React from "react";
 import truckImg from "@/assets/truck-highway-sunny-sky.jpg";
 import HomeNavbar from "../components/HomeNavbar";
-import { useUserAuth } from "../context/UserAuthContext";
+import { useUserAuth } from "../hooks/useUserAuth";
 import { useEffect, useState } from "react";
 
 export default function Home() {
   const { accessToken } = useUserAuth();
+  const [availableTrucks, setAvailableTrucks] = useState([]);
+  const [maintenanceTrucks, setMaintenanceTrucks] = useState([]);
+  const [unavailableTrucks, setUnavailableTrucks] = useState([]);
+  const [totalTruck, setTotalTruck] = useState([]);
   const maintenanceTrucks = Array(4).fill({
     id: "m",
     brand: "Hino",
@@ -44,6 +48,33 @@ export default function Home() {
       content
     );
   };
+  useEffect(() => {
+    const fetchAllTruck = async () => {
+      try {
+        const res = await fetch("/api/truck/fetchAllTrucks", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          },
+          credentials: "include"
+        });
+        const result = await res.json();
+
+        if(!result.success){
+          alert(result.message);
+          return;
+        }
+        const trucks = result.trucks;
+        setTotalTruck(trucks.length);
+        setAvailableTrucks(trucks.filter(truck => truck.status == "available" && truck.on_trip == 0));
+        setUnavailableTrucks(trucks.filter(truck => truck.status == "unavailable"));
+        setMaintenanceTrucks(trucks.filter(truck => truck.status == "maintenance" ));
+      } catch (error) {
+        console.log("FetchAllTruck ERROR: ", error);
+      }
+    }
+    fetchAllTruck();
+  }, []);
 
   return (
       accessToken ? (
@@ -66,19 +97,19 @@ export default function Home() {
         {/* STATS BAR */}
         <div className="stats-bar">
           <div className="stat-item">
-            <div className="stat-number">0</div>
+            <div className="stat-number">{totalTruck}</div>
             <div className="stat-label">Total Vehicle</div>
           </div>
           <div className="stat-item">
-            <div className="stat-number">0</div>
+            <div className="stat-number">{availableTrucks.length}</div>
             <div className="stat-label">Available</div>
           </div>
           <div className="stat-item">
-            <div className="stat-number">0</div>
+            <div className="stat-number">{maintenanceTrucks.length}</div>
             <div className="stat-label">In Maintenance</div>
           </div>
           <div className="stat-item">
-            <div className="stat-number">0</div>
+            <div className="stat-number">{unavailableTrucks.length}</div>
             <div className="stat-label">Unavailable</div>
           </div>
         </div>

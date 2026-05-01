@@ -10,7 +10,7 @@ export const jwtUserAuthenticator = (req, res, next) => {
     if(!accessToken){return res.status(401).json({success: false, message: " Unauthorized Access; Invalid Token"})};
     try {
         const decode = jwt.verify(accessToken, process.env.user_access_token);
-        req.user = decode.UID;
+        req.user = decode;
         next();
     } catch (error) {
         console.log("jwtUserAuthenticator Error: ", error);

@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { useUserAuth } from '../context/UserAuthContext';
+import { useUserAuth } from '../hooks/useUserAuth';
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -33,9 +33,9 @@ export default function SignIn() {
         setFormData({ email: '', password: '' });
         return;
       }
-      await logInAuth(signInRes.accessToken)
+      logInAuth(signInRes.accessToken)
       navigate("/home");
-      alert(signInRes.message);
+      alert(signInRes.accessToken);
     } catch (err) {
       console.log("Login error:", err);
       setError('An error occurred during login.');

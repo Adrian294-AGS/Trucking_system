@@ -3,7 +3,7 @@ import db from "../database/sqlConnection.js";
 // trucks operations and others
 
 export const fetchTotalTruckToDatabase = async () => {
-  const [totalTruck] = await db.query(`SELECT * FROM tbl_truck`);
+  const [totalTruck] = await db.query(`SELECT brand, photo_url, status, on_trip FROM tbl_truck`);
   return totalTruck;
 };
 
@@ -83,7 +83,7 @@ export const insertToUserLog = async (input) => {
 
 export const fetchUserLogs = async () => {
   const [result] = await db.query(
-    `SELECT UID, email, role, Created_at, action, status FROM tbl_logs`,
+    `SELECT UID, email, role, Created_at, action, status FROM tbl_logs ORDER BY Created_at DESC`,
   );
   return result;
 };
