@@ -4,6 +4,7 @@ export const UserAuthContext = createContext();
 
 export const UserAuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState("");
+  const [authLoading, setAuthLoading] = useState(true);
   const [user, setUser] = useState({
     username: "",
     email: "",
@@ -38,7 +39,7 @@ export const UserAuthProvider = ({ children }) => {
     } catch (error) {
       console.log("logInAuth ERROR: ", error);
     }
-  }
+  };
 
   const logInAuth = async (token) => {
     setAccessToken(token);
@@ -60,27 +61,36 @@ export const UserAuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    if(window.location.pathname === "/" || window.location.pathname === "/login" || window.location.pathname === "/admin") {
+      setAuthLoading(false)
+      return;
+    };
     const getToken = async () => {
       try {
-      const res = await fetch("/api/user/getToken", {
-        method: "GET",
-        credentials: "include"
-      });
-      const result = await res.json();
-      const token = result.accessToken;
-      setAccessToken(token);
-      await fetchUserInfo(token);
-    } catch (error) {
-      console.log("RefreshToken ERROR: ", error);
-    }
-    }
+        const res = await fetch("/api/user/getToken", {
+          method: "GET",
+          credentials: "include",
+        });
+        const result = await res.json();
+        const token = result.accessToken;
+        if (result.success) {
+          setAccessToken(token);
+          await fetchUserInfo(token);
+        }
+      } catch (error) {
+        console.log("RefreshToken ERROR: ", error);
+      } finally {
+        setAuthLoading(false);
+      }
+    };
     getToken();
   }, []);
 
   return (
-    <UserAuthContext.Provider value={{ user, logInAuth, logout, accessToken}}>
+    <UserAuthContext.Provider
+      value={{ user, logInAuth, logout, accessToken, authLoading }}
+    >
       {children}
     </UserAuthContext.Provider>
   );
 };
-

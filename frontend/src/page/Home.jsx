@@ -3,83 +3,65 @@ import truckImg from "@/assets/truck-highway-sunny-sky.jpg";
 import HomeNavbar from "../components/HomeNavbar";
 import { useUserAuth } from "../hooks/useUserAuth";
 import { useEffect, useState } from "react";
+import { useSocket } from "../hooks/useSocket";
 
 export default function Home() {
-  const { accessToken } = useUserAuth();
+  const { accessToken, authLoading } = useUserAuth();
+  const { socket } = useSocket();
   const [availableTrucks, setAvailableTrucks] = useState([]);
   const [maintenanceTrucks, setMaintenanceTrucks] = useState([]);
   const [unavailableTrucks, setUnavailableTrucks] = useState([]);
   const [totalTruck, setTotalTruck] = useState([]);
-  const maintenanceTrucks = Array(4).fill({
-    id: "m",
-    brand: "Hino",
-    img: "../images/truck1.jpg",
-  });
-  const unavailableTrucks = Array(4).fill({
-    id: "u",
-    brand: "Isuzu",
-    img: "../images/truck1.jpg",
-  });
-  const availableTrucks = Array(8).fill({
-    id: "a",
-    brand: "Mitsubishi",
-    img: "../images/truck1.jpg",
-  });
+  const [message, setMessage] = useState("");
 
-  const TruckCard = ({ status, truck, isLink = true }) => {
-    const content = (
-      <div className={`truck-slot ${status}`}>
-        <div className="slot-header">
-          {status === "maintenance"
-            ? "Under maintenance"
-            : status.charAt(0).toUpperCase() + status.slice(1)}
-        </div>
-        <div className="truck-img">
-          <img src={truckImg || "#"} alt={`Truck ${truck.brand}`} />
-        </div>
-        <div className="slot-footer">Brand: {truck.brand}</div>
-      </div>
-    );
-    return isLink ? (
-      <a href="#" className="truck-link" onClick={(e) => e.preventDefault()}>
-        {content}
-      </a>
-    ) : (
-      content
-    );
+  const fetchAllTruck = async () => {
+    try {
+      const res = await fetch("/api/truck/fetchAllTrucks", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        credentials: "include",
+      });
+      const result = await res.json();
+
+      if (!result.success) {
+        alert(result.message);
+        return;
+      }
+      const trucks = result.trucks;
+      setTotalTruck(trucks.length);
+      setAvailableTrucks(
+        trucks.filter(
+          (truck) => truck.status == "available" && truck.on_trip == 0,
+        ),
+      );
+      setUnavailableTrucks(
+        trucks.filter(
+          (truck) => truck.status == "unavailable" || truck.on_trip == 1,
+        ),
+      );
+      setMaintenanceTrucks(
+        trucks.filter((truck) => truck.status == "maintenance"),
+      );
+    } catch (error) {
+      console.log("FetchAllTruck ERROR: ", error);
+    }
   };
   useEffect(() => {
-    const fetchAllTruck = async () => {
-      try {
-        const res = await fetch("/api/truck/fetchAllTrucks", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          },
-          credentials: "include"
-        });
-        const result = await res.json();
-
-        if(!result.success){
-          alert(result.message);
-          return;
-        }
-        const trucks = result.trucks;
-        setTotalTruck(trucks.length);
-        setAvailableTrucks(trucks.filter(truck => truck.status == "available" && truck.on_trip == 0));
-        setUnavailableTrucks(trucks.filter(truck => truck.status == "unavailable"));
-        setMaintenanceTrucks(trucks.filter(truck => truck.status == "maintenance" ));
-      } catch (error) {
-        console.log("FetchAllTruck ERROR: ", error);
-      }
+    if (authLoading || !accessToken) return;
+    if (socket) {
+      const handler = ({ message }) => {
+        setMessage(message);
+      };
+      socket.on("update", handler);
     }
     fetchAllTruck();
-  }, []);
+  }, [socket, accessToken, authLoading]);
 
-  return (
-      accessToken ? (
-      <div>
-       <HomeNavbar />
+  return accessToken ? (
+    <div>
+      <HomeNavbar />
       <main className="page">
         {/* BANNER */}
         <div className="banner">
@@ -124,12 +106,19 @@ export default function Home() {
               </span>
               <div className="truck-grid truck-grid-2col">
                 {maintenanceTrucks.map((t, i) => (
-                  <TruckCard
-                    key={i}
-                    status="maintenance"
-                    truck={t}
-                    isLink={false}
-                  />
+                  <div key={i} className={`truck-slot ${t.status}`}>
+                    <div className="slot-header">Under maintenance</div>
+                    <div className="truck-img">
+                      <img
+                        src={
+                          `${import.meta.env.VITE_API_URL}/${t.photo_url}` ||
+                          `${truckImg}`
+                        }
+                        alt={`Truck `}
+                      />
+                    </div>
+                    <div className="slot-footer">Brand: {t.brand}</div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -139,31 +128,49 @@ export default function Home() {
               <span className="status-badge badge-red">Unavailable</span>
               <div className="truck-grid truck-grid-2col">
                 {unavailableTrucks.map((t, i) => (
-                  <TruckCard
-                    key={i}
-                    status="unavailable"
-                    truck={t}
-                    isLink={false}
-                  />
+                  <div key={i} className={`truck-slot unavailable`}>
+                    <div className="slot-header">Unavailable Truck</div>
+                    <div className="truck-img">
+                      <img
+                        src={
+                          `${import.meta.env.VITE_API_URL}/${t.photo_url}` ||
+                          `${truckImg}`
+                        }
+                        alt={`Truck `}
+                      />
+                    </div>
+                    <div className="slot-footer">Brand: {t.brand}</div>
+                  </div>
                 ))}
               </div>
             </div>
           </div>
 
           {/* Available */}
-          <h2 className="section-title">Available Trucks</h2>
+          <h2 className="section-title" style={{ color: "green" }}>
+            Available Trucks
+          </h2>
           <div className="truck-grid">
             {availableTrucks.map((t, i) => (
-              <TruckCard key={i} status="available" truck={t} />
+              <div key={i} className={`truck-slot ${t.status}`}>
+                <div className="slot-header">Available Truck</div>
+                <div className="truck-img">
+                  <img
+                    src={
+                      `${import.meta.env.VITE_API_URL}/${t.photo_url}` ||
+                      `${truckImg}`
+                    }
+                    alt={`Truck `}
+                  />
+                </div>
+                <div className="slot-footer">Brand: {t.brand}</div>
+              </div>
             ))}
           </div>
         </div>
       </main>
-      </div>
-     ):(
-      <div>
-        No Content
-      </div>
-     )
-  )
+    </div>
+  ) : (
+    <div>No Content</div>
+  );
 }

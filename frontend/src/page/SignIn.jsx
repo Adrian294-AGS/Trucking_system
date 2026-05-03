@@ -35,7 +35,6 @@ export default function SignIn() {
       }
       logInAuth(signInRes.accessToken)
       navigate("/home");
-      alert(signInRes.accessToken);
     } catch (err) {
       console.log("Login error:", err);
       setError('An error occurred during login.');

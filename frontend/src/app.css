@@ -560,7 +560,7 @@ body {
   margin-bottom: 30px;
   margin-left: auto;
   margin-right: auto;
-  width: 100%;
+  width: 100%;  
 }
 .truck-grid-2col {
   grid-template-columns: repeat(2, 1fr) !important;
