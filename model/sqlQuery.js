@@ -9,7 +9,7 @@ export const fetchTotalTruckToDatabase = async () => {
 
 export const fetchAvailableTruck = async () => {
   const [availableTruck] = await db.query(
-    `SELECT * from tbl_truck WHERE status = Available`,
+    `SELECT truck_id, brand, truck_type, photo_url, plate_number from tbl_truck WHERE status = "available" AND NOT on_trip = 1`,
   );
   return availableTruck;
 };

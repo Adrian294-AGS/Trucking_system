@@ -9,6 +9,9 @@ import Home from "./page/Home";
 import Truck from "./page/Truck";
 import { useUserAuth } from "./hooks/useUserAuth";
 import NotificationPage from "./components/NotificationPage";
+import Orders from "./page/Orders";
+import ContactPage from "./page/ContactPage";
+
 
 function App() {
   const ProtectedRoute = ({Children, allowedRole}) => {
@@ -39,6 +42,8 @@ function App() {
                   <Route path="/home" element={<Home />} />
                   <Route path="/trucks" element={<Truck />} />
                   <Route path="/success" element={<NotificationPage />} />
+                  <Route path="/orders" element={<Orders />} />
+                  <Route path="/contact" element={<ContactPage />} />
             </Routes>
           </div>
         </BrowserRouter>

@@ -4,16 +4,19 @@ import HomeNavbar from "../components/HomeNavbar";
 import { useUserAuth } from "../hooks/useUserAuth";
 import { useEffect, useState } from "react";
 import { useSocket } from "../hooks/useSocket";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
-  const { accessToken, authLoading } = useUserAuth();
+  const { accessToken, authLoading, user } = useUserAuth();
   const { socket } = useSocket();
+  const navigate = useNavigate();
   const [availableTrucks, setAvailableTrucks] = useState([]);
   const [maintenanceTrucks, setMaintenanceTrucks] = useState([]);
   const [unavailableTrucks, setUnavailableTrucks] = useState([]);
   const [totalTruck, setTotalTruck] = useState([]);
   const [message, setMessage] = useState("");
 
+  
   const fetchAllTruck = async () => {
     try {
       const res = await fetch("/api/truck/fetchAllTrucks", {
@@ -61,7 +64,7 @@ export default function Home() {
 
   return accessToken ? (
     <div>
-      <HomeNavbar />
+      <HomeNavbar user={user} />
       <main className="page">
         {/* BANNER */}
         <div className="banner">
@@ -78,11 +81,11 @@ export default function Home() {
 
         {/* STATS BAR */}
         <div className="stats-bar">
-          <div className="stat-item">
+          <div className="stat-item" >
             <div className="stat-number">{totalTruck}</div>
-            <div className="stat-label">Total Vehicle</div>
+            <div className="stat-label" >Total Vehicle</div>
           </div>
-          <div className="stat-item">
+          <div className="stat-item" >
             <div className="stat-number">{availableTrucks.length}</div>
             <div className="stat-label">Available</div>
           </div>

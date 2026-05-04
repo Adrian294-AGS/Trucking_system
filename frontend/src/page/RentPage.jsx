@@ -3,10 +3,12 @@ import { useState } from "react";
 import "@/assets/style/rentPage.css";
 import HomeNavbar from "../components/HomeNavbar";
 import { useUserAuth } from "../hooks/useUserAuth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation} from "react-router-dom";
 
 export default function RentPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { truck_id, truck_brand, truck_plate, truck_photo} = location.state;
   const {accessToken} = useUserAuth();
   const [formData, setFormData] = useState({
     pickup_date: "",
@@ -86,11 +88,11 @@ export default function RentPage() {
           {/* TRUCK PREVIEW */}
           <div className="truck-preview">
             <div className="truck-preview-img">
-              <img src="../src/assets/truck-highway-sunny-sky.jpg" alt="Isuzu Wing Truck" />
+              <img src={`${import.meta.env.VITE_API_URL}/${truck_photo}`} alt="Isuzu Wing Truck" />
             </div>
             <div className="truck-preview-info">
-              <div className="truck-name">Isuzu-Wing truck</div>
-              <div className="truck-plate">Plate: 00-000</div>
+              <div className="truck-name">{truck_brand}</div>
+              <div className="truck-plate">{truck_plate}</div>
             </div>
             <div className="truck-status">Available</div>
           </div>

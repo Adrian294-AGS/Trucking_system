@@ -23,7 +23,11 @@ export const fetchAllTrucks = async (req, res) => {
 // fetching Available Trucks
 export const fetchAvailableTrucks = async (req, res) => {
     try {
-        const availableTruck = await fetchAvailableTruck();     
+        const availableTruck = await fetchAvailableTruck();
+        if(!availableTruck){
+           return res.status(404).json({success: false, message: "No Trucks Stored"});
+        }
+        return res.status(200).json({success: true, availableTruck});
     } catch (error) {
         console.log("fetchAvailableTrucks ERROR: ", error);
     }

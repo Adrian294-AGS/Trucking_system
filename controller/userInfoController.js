@@ -13,6 +13,7 @@ export const userInfo = async (req, res) => {
     return res
       .status(200)
       .json({
+        UID: UID,
         success: true,
         username: user.username,
         photo: user.photo,

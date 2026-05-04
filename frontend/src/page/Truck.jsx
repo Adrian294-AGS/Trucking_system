@@ -1,44 +1,60 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HomeNavbar from "../components/HomeNavbar";
 import truckingLogo from "@/assets/truck-highway-sunny-sky.jpg";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useUserAuth } from "../hooks/useUserAuth";
 
 export default function Truck() {
   const navigate = useNavigate();
-  const { accessToken } = useUserAuth();
-  const [trucks, setTrucks] = useState([
-    { id: 1, brand: "Isuzu", type: "Wing Van" },
-    { id: 2, brand: "Hino", type: "Dump Truck" },
-    { id: 3, brand: "Mitsubishi", type: "Refrigerated" },
-    { id: 4, brand: "Foton", type: "Flatbed" },
-    { id: 5, brand: "Isuzu", type: "Cargo Van" },
-    { id: 6, brand: "Hino", type: "Wing Van" },
-    { id: 7, brand: "Mitsubishi", type: "Dump Truck" },
-    { id: 8, brand: "Foton", type: "Refrigerated" },
-  ]);
+  const [error, setError] = useState("");
+  const { accessToken, user } = useUserAuth();
+  const [trucks, setTrucks] = useState([]);
 
-  const handleRent = (id) => {
-    console.log("Initiating rent flow for truck:", id);
-    navigate("/rent");
-    };
+  const handleRent = (truckId, brand, plateNumber, photo) => {
+    navigate("/rent", {state: {truck_id: truckId, truck_brand: brand, truck_plate: plateNumber, truck_photo: photo}});
+  };
+
+  const fetchAvailableTrucks = async () => {
+    try {
+      const res = await fetch("/api/truck/fetchAvailableTrucks", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        },
+        credentials: "include"
+      });
+      const availableTrucks = await res.json();
+      if(!availableTrucks.success){
+        setError(availableTrucks.message);
+        return;
+      }
+      setTrucks(availableTrucks.availableTruck);
+    } catch (error) {
+      console.log("fetchAvailableTrucks ERROR: ", error);
+    }
+  }
+  
+  useEffect(() => {
+    if(!accessToken) return;
+    fetchAvailableTrucks();
+  }, [accessToken]);
 
   return accessToken ? (
     <div>
-      <HomeNavbar />
+      <HomeNavbar user={user}/>
       <main className="page">
         <div className="main-content">
           <h2 className="status">Available trucks</h2>
 
           <div className="truck-grid">
             {trucks.map((truck) => (
-              <div key={truck.id} className="truck-slot available">
+              <div key={truck.truck_id} className="truck-slot available">
                 <div className="slot-header">Available</div>
                 <div className="truck-img">
                   <img
-                    src={truckingLogo}
-                    alt={`${truck.brand} ${truck.type}`}
+                    src={`${import.meta.env.VITE_API_URL}/${truck.photo_url}`}
+                    alt={`${truck.brand} ${truck.truck_type}`}
                   />
                 </div>
                 <div className="truck-info">
@@ -46,17 +62,18 @@ export default function Truck() {
                     <strong>Brand:</strong> {truck.brand}
                   </div>
                   <div className="info-row">
-                    <strong>Type:</strong> {truck.type}
+                    <strong>Type:</strong> {truck.truck_type}
                   </div>
-                  
+
+                 
                     <button
-                      target="_blank"
-                      className="rent-button"
-                      onClick={() => handleRent(truck.id)}
-                    >
-                      RENT
-                    </button>
-               
+                    target="_blank"
+                    className="rent-button"
+                    onClick={() => handleRent(truck.truck_id, truck.brand, truck.plate_number, truck.photo_url)}
+                  >
+                    RENT
+                  </button>
+                 
                 </div>
               </div>
             ))}

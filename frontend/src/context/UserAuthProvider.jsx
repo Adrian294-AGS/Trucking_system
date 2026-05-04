@@ -6,11 +6,13 @@ export const UserAuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState("");
   const [authLoading, setAuthLoading] = useState(true);
   const [user, setUser] = useState({
-    username: "",
+    UID: '',
+    fullName: "",
     email: "",
     photo: "",
     role: "",
-    phoneNumber: "",
+    phone: "",
+    address: 'Santiago City, Isabela'
   });
 
   const fetchUserInfo = async (token) => {
@@ -29,13 +31,12 @@ export const UserAuthProvider = ({ children }) => {
         alert(userInfo.message);
         return;
       }
-      setUser({
-        username: userInfo.username,
+      setUser({...user,  UID: userInfo.UID,
+        fullName: userInfo.username,
         photo: userInfo.photo,
         role: userInfo.role,
         email: userInfo.email,
-        phoneNumber: userInfo.phoneNumber,
-      });
+        phone: userInfo.phoneNumber});
     } catch (error) {
       console.log("logInAuth ERROR: ", error);
     }
@@ -88,7 +89,7 @@ export const UserAuthProvider = ({ children }) => {
 
   return (
     <UserAuthContext.Provider
-      value={{ user, logInAuth, logout, accessToken, authLoading }}
+      value={{ user, setUser, logInAuth, logout, accessToken, authLoading, logout, setAccessToken }}
     >
       {children}
     </UserAuthContext.Provider>
