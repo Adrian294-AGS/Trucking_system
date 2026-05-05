@@ -4,6 +4,7 @@ import {
   insertToDatabase,
   updateTruck,
   isAlreadyInTransac,
+  fetchAllRelatedTruckToUser
 } from "../model/sqlQuery.js";
 
 // fetching all trucks for the preview page
@@ -85,3 +86,21 @@ export const rentTruck = async (req, res) => {
     return res.status(500).json({ success: false, message: "SERVER ERROR" });
   }
 };
+
+
+// Geting user orders
+
+export const getOrders = async (req, res) => {
+  const { UID } = req.user;
+
+  try {
+    const orders = await fetchAllRelatedTruckToUser(UID);
+    if(!orders){
+      return res.status(404).json({success: false, message: "Trucks do not Found"})
+    }
+    return res.status(200).json({success: true, message: "Fetched Successfull", orders});
+  } catch (error) {
+    console.log("RentTruck ERROR: ", error);
+    return res.status(500).json({ success: false, message: "SERVER ERROR" });
+  }
+}

@@ -3,7 +3,9 @@ import db from "../database/sqlConnection.js";
 // trucks operations and others
 
 export const fetchTotalTruckToDatabase = async () => {
-  const [totalTruck] = await db.query(`SELECT brand, photo_url, status, on_trip FROM tbl_truck`);
+  const [totalTruck] = await db.query(
+    `SELECT brand, photo_url, status, on_trip FROM tbl_truck`,
+  );
   return totalTruck;
 };
 
@@ -36,6 +38,14 @@ export const fetchSpecificTruck = async (truckId) => {
   return truck[0];
 };
 
+export const fetchAllRelatedTruckToUser = async (id) => {
+  const [result] = await db.query(
+    "SELECT A.UID, B.pickup_date, B.return_date, B.pickup_location, B.status, B.note, C.photo_url, C.model, C.plate_number FROM tbl_trip AS A JOIN tbl_transaction AS B ON A.trip_id = B.trip_id JOIN tbl_truck AS C ON A.truck_id = C.truck_id WHERE A.UID = ?",
+    [id],
+  );
+  return result;
+};
+
 // Users and Admin Operations
 
 export const fetchUserForSignup = async (username, email) => {
@@ -63,7 +73,10 @@ export const fetchUserInfo = async (params) => {
 };
 
 export const isAlreadyInTransac = async (id) => {
-  const [result] = await db.query("SELECT trip_id FROM tbl_trip WHERE truck_id = ?", [id]);
+  const [result] = await db.query(
+    "SELECT trip_id FROM tbl_trip WHERE truck_id = ?",
+    [id],
+  );
   return result[0];
 };
 
@@ -75,7 +88,10 @@ export const insertToDatabase = async (table, input) => {
 };
 
 export const updateTruck = async (table, input, id) => {
-  const [result] = await db.query(`UPDATE \`${table}\` SET ? WHERE truck_id = ?` , [input, id]);
+  const [result] = await db.query(
+    `UPDATE \`${table}\` SET ? WHERE truck_id = ?`,
+    [input, id],
+  );
   return result;
 };
 
