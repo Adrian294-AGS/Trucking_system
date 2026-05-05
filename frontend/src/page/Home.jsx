@@ -16,7 +16,6 @@ export default function Home() {
   const [totalTruck, setTotalTruck] = useState([]);
   const [message, setMessage] = useState("");
 
-  
   const fetchAllTruck = async () => {
     try {
       const res = await fetch("/api/truck/fetchAllTrucks", {
@@ -36,12 +35,13 @@ export default function Home() {
       setTotalTruck(trucks.length);
       setAvailableTrucks(
         trucks.filter(
-          (truck) => truck.status == "available" && truck.on_trip == 0,
+          (truck) => truck.status == "available"
         ),
       );
       setUnavailableTrucks(
         trucks.filter(
-          (truck) => truck.status == "unavailable" || truck.on_trip == 1,
+          (truck) =>
+            truck.status == "unavailable" 
         ),
       );
       setMaintenanceTrucks(
@@ -81,11 +81,11 @@ export default function Home() {
 
         {/* STATS BAR */}
         <div className="stats-bar">
-          <div className="stat-item" >
+          <div className="stat-item">
             <div className="stat-number">{totalTruck}</div>
-            <div className="stat-label" >Total Vehicle</div>
+            <div className="stat-label">Total Vehicle</div>
           </div>
-          <div className="stat-item" >
+          <div className="stat-item">
             <div className="stat-number">{availableTrucks.length}</div>
             <div className="stat-label">Available</div>
           </div>
@@ -102,6 +102,27 @@ export default function Home() {
         {/* MAIN CONTENT */}
         <div className="main-content">
           <div className="status-row">
+            {/* Available */}
+            <h2 className="section-title" style={{ color: "green"}}>
+              Available Trucks
+            </h2>
+            <div className="truck-grid">
+              {availableTrucks.map((t, i) => (
+                <div key={i} className={t.on_trip == 1 ? "truck-slot reserved" : "truck-slot available"}>
+                  <div className="slot-header">{t.on_trip == 1 ? "Reserved" : "Available"}</div>
+                  <div className="truck-img">
+                    <img
+                      src={
+                        `${import.meta.env.VITE_API_URL}/${t.photo_url}` ||
+                        `${truckImg}`
+                      }
+                      alt={`Truck `}
+                    />
+                  </div>
+                  <div className="slot-footer">Brand: {t.brand}</div>
+                </div>
+              ))}
+            </div>
             {/* Maintenance */}
             <div className="status-col">
               <span className="status-badge badge-yellow">
@@ -109,7 +130,7 @@ export default function Home() {
               </span>
               <div className="truck-grid truck-grid-2col">
                 {maintenanceTrucks.map((t, i) => (
-                  <div key={i} className={`truck-slot ${t.status}`}>
+                  <div key={i} className={`truck-slot maintenance`}>
                     <div className="slot-header">Under maintenance</div>
                     <div className="truck-img">
                       <img
@@ -147,28 +168,6 @@ export default function Home() {
                 ))}
               </div>
             </div>
-          </div>
-
-          {/* Available */}
-          <h2 className="section-title" style={{ color: "green" }}>
-            Available Trucks
-          </h2>
-          <div className="truck-grid">
-            {availableTrucks.map((t, i) => (
-              <div key={i} className={`truck-slot ${t.status}`}>
-                <div className="slot-header">Available Truck</div>
-                <div className="truck-img">
-                  <img
-                    src={
-                      `${import.meta.env.VITE_API_URL}/${t.photo_url}` ||
-                      `${truckImg}`
-                    }
-                    alt={`Truck `}
-                  />
-                </div>
-                <div className="slot-footer">Brand: {t.brand}</div>
-              </div>
-            ))}
           </div>
         </div>
       </main>

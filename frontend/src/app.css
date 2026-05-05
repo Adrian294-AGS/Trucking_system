@@ -31,9 +31,7 @@
   margin: 0;
   padding: 0;
 }
-html {
-  scrollbar-gutter: stable;
-}
+
 body {
   font-family: "Barlow", sans-serif;
   background: var(--bg-light);
@@ -521,6 +519,10 @@ body {
   color: var(--text-dark);
 }
 
+.status.sign{
+  color: var(--success-green);
+}
+
 .status-row {
   display: flex;
   gap: 32px;
@@ -530,8 +532,8 @@ body {
 }
 .status-col {
   flex: 1;
-  min-width: 300px;
-  max-width: 450px;
+  min-width:300px;
+  max-width: 600px;
 }
 .status-badge {
   display: inline-block;
@@ -596,6 +598,9 @@ body {
 .truck-slot.available {
   border-top: 4px solid var(--success-green);
 }
+.truck-slot.reserved {
+  border-top: 4px solid var(--admin-blue);
+}
 .slot-header {
   padding: 6px 10px;
   font-size: 11px;
@@ -612,6 +617,9 @@ body {
 }
 .truck-slot.available .slot-header {
   background: var(--success-green);
+}
+.truck-slot.reserved .slot-header {
+  background: var(--admin-blue);
 }
 .truck-img {
   width: 100%;
@@ -946,6 +954,31 @@ body {
   cursor: pointer;
   transition: background 0.2s;
 }
+
+.rent-button.reserved{
+  width: 100%;
+  padding: 9px;
+  margin-top: 8px;
+  background: var(--admin-blue);
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-family: "Barlow", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.rent-button.reserved:hover{
+  background: var(--admin-blue-dark);
+}
+.rent-button.reserved:active{
+  transform: scale(0.98);
+}
+
 .rent-button:hover {
   background: var(--success-green-dark);
 }
@@ -955,7 +988,6 @@ body {
 
 /* ── SUCCESS / CONFIRMATION PAGE ── */
 .page-content {
-  max-width: 560px;
   margin: 40px auto;
   padding: 0 20px 48px;
 }
@@ -978,6 +1010,7 @@ body {
   font-weight: 800;
   letter-spacing: 1px;
   margin-bottom: 10px;
+ 
 }
 
 .logo-area {

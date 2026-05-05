@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import HomeNavbar from '../components/HomeNavbar';
 import { useUserAuth } from '../hooks/useUserAuth';
+import { useNavigate } from 'react-router-dom';
+import { useSocket } from '../hooks/useSocket';
 
 export default function Orders() {
   const {user, accessToken} = useUserAuth();
+  const [order, setOrder] = useState([]);
+  const {socket} = useSocket();
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
  const order = {
     truck: {
       name: 'Isuzu-Wing Truck',
@@ -15,6 +21,40 @@ export default function Orders() {
     location: 'Manila Port Area, Philippines',
     notes: 'Please bring extra straps and tarpaulin.'
   };
+
+  const fetchOrders = async () => {
+    try {
+      const res = await fetch("/api/truck/getOrders", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        },
+        credentials: "include"
+      });
+
+      const result = await res.json();
+
+      if(!result.success){
+        setError(result.message);
+        return;
+      }
+
+      setOrder(result.orders);
+
+    } catch (error) {
+      console.log("fetchOrders ERROR: ", error);
+    }
+  }
+
+  useEffect(() => {
+    if(!accessToken){
+      navigate("/");
+      return;
+    };
+
+
+
+  }, [socket]);
 
   return (
     accessToken ? (

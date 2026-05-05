@@ -5,17 +5,8 @@ import truckingLogo from "@/assets/ssk_trucking_white.png";
 
 export default function NotificationPage() {
   const location = useLocation();
-  const data = location.state || {
-    clientName: "Alexandrie Abon",
-    truck: {
-      brand: "Isuzu",
-      plate: "000-11-ABC",
-      year: "2021",
-      type: "Wing van",
-      fuel: "Diesel",
-    },
-  };
-
+  const data = location.state;
+ 
   return (
     <div>
       <HomeNavbar />
@@ -23,7 +14,7 @@ export default function NotificationPage() {
         <div className="page-content">
           <div className="success-card">
             <div className="success-header">
-              <div className="success-title">Rent successfully</div>
+              <div className="success-title">Rent successfully </div>
               <div className="logo-area">
                 <img src={truckingLogo} alt="SSK Logo" />
               </div>

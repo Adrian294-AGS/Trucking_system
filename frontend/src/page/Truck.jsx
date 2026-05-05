@@ -45,12 +45,12 @@ export default function Truck() {
       <HomeNavbar user={user}/>
       <main className="page">
         <div className="main-content">
-          <h2 className="status">Available trucks</h2>
-
+          <h2 className="status sign">Available trucks</h2>
+          
           <div className="truck-grid">
             {trucks.map((truck) => (
-              <div key={truck.truck_id} className="truck-slot available">
-                <div className="slot-header">Available</div>
+              <div key={truck.truck_id} className={truck.on_trip == 1 ? "truck-slot reserved" : "truck-slot available"}>
+                <div className="slot-header" >{truck.on_trip == 1 ? "Reserved" : "Available"}</div>
                 <div className="truck-img">
                   <img
                     src={`${import.meta.env.VITE_API_URL}/${truck.photo_url}`}
@@ -65,14 +65,23 @@ export default function Truck() {
                     <strong>Type:</strong> {truck.truck_type}
                   </div>
 
-                 
-                    <button
+                  {truck.on_trip == 1 ? (
+                       <button
+                    target="_blank"
+                    className="rent-button reserved"
+                  >
+                    Reserved
+                  </button>
+                  ) : (
+                       <button
                     target="_blank"
                     className="rent-button"
                     onClick={() => handleRent(truck.truck_id, truck.brand, truck.plate_number, truck.photo_url)}
                   >
                     RENT
                   </button>
+                  )}
+                 
                  
                 </div>
               </div>

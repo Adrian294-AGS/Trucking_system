@@ -9,7 +9,7 @@ export const fetchTotalTruckToDatabase = async () => {
 
 export const fetchAvailableTruck = async () => {
   const [availableTruck] = await db.query(
-    `SELECT truck_id, brand, truck_type, photo_url, plate_number from tbl_truck WHERE status = "available" AND NOT on_trip = 1`,
+    `SELECT truck_id, brand, truck_type, photo_url, plate_number, on_trip from tbl_truck WHERE status = "available"`,
   );
   return availableTruck;
 };
@@ -62,6 +62,11 @@ export const fetchUserInfo = async (params) => {
   return result[0];
 };
 
+export const isAlreadyInTransac = async (id) => {
+  const [result] = await db.query("SELECT trip_id FROM tbl_trip WHERE truck_id = ?", [id]);
+  return result[0];
+};
+
 // global operations and usage
 
 export const insertToDatabase = async (table, input) => {
@@ -69,8 +74,8 @@ export const insertToDatabase = async (table, input) => {
   return result;
 };
 
-export const updateDatabase = async (table, input) => {
-  const [result] = await db.query(`UPDATE \`${table}\` SET ?`, [input]);
+export const updateTruck = async (table, input, id) => {
+  const [result] = await db.query(`UPDATE \`${table}\` SET ? WHERE truck_id = ?` , [input, id]);
   return result;
 };
 

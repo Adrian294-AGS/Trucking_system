@@ -22,7 +22,7 @@ function App() {
   }
 
   return (
-    <div>
+    <>
       <div
         style={{ height: "100vh", display: "flex", flexDirection: "column" }}
       >
@@ -45,11 +45,13 @@ function App() {
                   <Route path="/orders" element={<Orders />} />
                   <Route path="/contact" element={<ContactPage />} />
             </Routes>
+            
           </div>
         </BrowserRouter>
+          <Footer />
       </div>
-      <Footer />
-    </div>
+      
+    </>
   );
 }
 
