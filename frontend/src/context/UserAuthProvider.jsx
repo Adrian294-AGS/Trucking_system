@@ -6,14 +6,15 @@ export const UserAuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState("");
   const [authLoading, setAuthLoading] = useState(true);
   const [user, setUser] = useState({
-    UID: '',
+    UID: "",
     fullName: "",
     email: "",
     photo: "",
     role: "",
     phone: "",
-    address: 'Santiago City, Isabela'
+    address: "Santiago City, Isabela",
   });
+  const [refreshLoad, setRefreshLoad] = useState("");
 
   const fetchUserInfo = async (token) => {
     try {
@@ -31,12 +32,15 @@ export const UserAuthProvider = ({ children }) => {
         alert(userInfo.message);
         return;
       }
-      setUser({...user,  UID: userInfo.UID,
+      setUser({
+        ...user,
+        UID: userInfo.UID,
         fullName: userInfo.username,
         photo: userInfo.photo,
         role: userInfo.role,
         email: userInfo.email,
-        phone: userInfo.phoneNumber});
+        phone: userInfo.phoneNumber,
+      });
     } catch (error) {
       console.log("logInAuth ERROR: ", error);
     }
@@ -62,11 +66,16 @@ export const UserAuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if(window.location.pathname === "/" || window.location.pathname === "/login" || window.location.pathname === "/admin") {
-      setAuthLoading(false)
+    if (
+      window.location.pathname === "/" ||
+      window.location.pathname === "/login" ||
+      window.location.pathname === "/admin"
+    ) {
+      setAuthLoading(false);
       return;
-    };
+    }
     const getToken = async () => {
+      setRefreshLoad("refreshLoad");
       try {
         const res = await fetch("/api/user/getToken", {
           method: "GET",
@@ -74,10 +83,12 @@ export const UserAuthProvider = ({ children }) => {
         });
         const result = await res.json();
         const token = result.accessToken;
-        if (result.success) {
-          setAccessToken(token);
-          await fetchUserInfo(token);
+        if (!result.success) {
+          setRefreshLoad("unauthorized");
+          return;
         }
+        setAccessToken(token);
+        await fetchUserInfo(token);
       } catch (error) {
         console.log("RefreshToken ERROR: ", error);
       } finally {
@@ -89,7 +100,18 @@ export const UserAuthProvider = ({ children }) => {
 
   return (
     <UserAuthContext.Provider
-      value={{ user, setUser, logInAuth, logout, accessToken, authLoading, logout, setAccessToken }}
+      value={{
+        user,
+        setUser,
+        logInAuth,
+        logout,
+        accessToken,
+        authLoading,
+        logout,
+        setAccessToken,
+        refreshLoad,
+        setRefreshLoad
+      }}
     >
       {children}
     </UserAuthContext.Provider>

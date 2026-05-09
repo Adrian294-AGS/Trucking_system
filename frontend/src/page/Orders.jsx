@@ -23,16 +23,15 @@ export default function Orders() {
 
       const result = await res.json();
 
-
       if (!result.success) {
         setError(result.message);
         return;
       }
-      
+
       setOrder(result.orders);
     } catch (error) {
       console.log("fetchOrders ERROR: ", error);
-    } 
+    }
   };
 
   useEffect(() => {
@@ -40,86 +39,84 @@ export default function Orders() {
       return;
     }
     fetchOrders();
-  }, [socket, accessToken]);
+  }, [socket]);
 
-  return accessToken ? (
+  return (
     <div>
       <HomeNavbar user={user} />
       <main className="page">
         <div className="page-content">
           <h1 className="page-title">Your order</h1>
-         
+
           <div className="order-layout">
             {order.length > 0 ? (
-            order.map((order, id) => (
-               <div key={id}>
-                
-                <div className="truck-slot">
-                  <div className="truck-img">
-                    <img src={`${import.meta.env.VITE_API_URL}/${order.photo_url}`} alt={order.model} />
-                  </div>
-                  <div className="truck-info">
-                    <div className="truck-name">{order.model}</div>
-                    <div className="truck-plate">
-                      Plate: {order.plate_number}
+              order.map((order, id) => (
+                <div key={id}>
+                  <div className="truck-slot">
+                    <div className="truck-img">
+                      <img
+                        src={`${import.meta.env.VITE_API_URL}/${order.photo_url}`}
+                        alt={order.model}
+                      />
                     </div>
+                    <div className="truck-info">
+                      <div className="truck-name">{order.model}</div>
+                      <div className="truck-plate">
+                        Plate: {order.plate_number}
+                      </div>
+                    </div>
+                    <div className="truck-status available">Available</div>
                   </div>
-                  <div className="truck-status available">Available</div>
-                </div>
 
-                
-                <div className="order-form-box">
-                  <div className="form-title">Rent Details</div>
+                  <div className="order-form-box">
+                    <div className="form-title">Rent Details</div>
 
-                  <label>Pickup Date</label>
-                  <div className="input-row">
+                    <label>Pickup Date</label>
+                    <div className="input-row">
+                      <input
+                        type="date"
+                        className="form-input"
+                        value={order.pickup_date}
+                        readOnly
+                      />
+                      <span className="cal-icon">📅</span>
+                    </div>
+
+                    <label>Return Date</label>
+                    <div className="input-row">
+                      <input
+                        type="date"
+                        className="form-input"
+                        value={order.return_date}
+                        readOnly
+                      />
+                      <span className="cal-icon">📅</span>
+                    </div>
+
+                    <label>Pickup Location</label>
                     <input
-                      type="date"
-                      className="form-input"
-                      value={order.pickup_date}
+                      type="text"
+                      className="form-input location-input"
+                      placeholder="Enter Address"
+                      value={order.pickup_location}
                       readOnly
                     />
-                    <span className="cal-icon">📅</span>
-                  </div>
 
-                  <label>Return Date</label>
-                  <div className="input-row">
-                    <input
-                      type="date"
-                      className="form-input"
-                      value={order.return_date}
+                    <label>Notes</label>
+                    <textarea
+                      className="form-textarea"
+                      value={order.note}
                       readOnly
                     />
-                    <span className="cal-icon">📅</span>
                   </div>
-
-                  <label>Pickup Location</label>
-                  <input
-                    type="text"
-                    className="form-input location-input"
-                    placeholder="Enter Address"
-                    value={order.pickup_location}
-                    readOnly
-                  />
-
-                  <label>Notes</label>
-                  <textarea
-                    className="form-textarea"
-                    value={order.note}
-                    readOnly
-                  />
                 </div>
-              </div>
-          ))
-
-          ) : (
-            <div>NO CONTENT</div>
-          )}
+              ))
+            ) : (
+              <div>NO CONTENT</div>
+            )}
           </div>
         </div>
       </main>
     </div>
-  ) : (
-    <div>NO CONTENT</div>
   );
 }

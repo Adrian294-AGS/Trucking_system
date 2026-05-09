@@ -4,6 +4,7 @@ import "@/assets/style/rentPage.css";
 import HomeNavbar from "../components/HomeNavbar";
 import { useUserAuth } from "../hooks/useUserAuth";
 import { useNavigate, useLocation, data } from "react-router-dom";
+import LoadingPage from "../components/LoadingPage";
 
 export default function RentPage() {
   const navigate = useNavigate();
@@ -34,16 +35,15 @@ export default function RentPage() {
     const pickup = new Date(pickup_date);
     const returns = new Date(return_date);
     const now = new Date();
-    if(returns <= pickup){
-      setError("Return date must be on or after pickup date.")
+    if (returns <= pickup) {
+      setError("Return date must be on or after pickup date.");
       return false;
-    } else if(pickup < now){
-      setError("PickUp date must be on or after todys date.")
+    } else if (pickup < now) {
+      setError("PickUp date must be on or after todys date.");
       return false;
     } else {
       return true;
     }
-    
   };
 
   const handleSubmit = async (e) => {
@@ -86,18 +86,6 @@ export default function RentPage() {
       setSuccess(
         "🎉 Truck reserved successfully! Check your email for confirmation.",
       );
-      navigate("/success", {
-        state: {
-          clientName: user.fullName,
-          truck: {
-            brand: truck_brand,
-            plate: truck_plate,
-            year: "0202",
-            type: "Wing van",
-            fuel: "Diesel",
-          },
-        },
-      });
 
       setFormData({
         pickup_date: "",
@@ -107,12 +95,43 @@ export default function RentPage() {
       });
     } catch (err) {
       setError(err.message || "Failed to process rental. Please try again.");
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  return accessToken ? (
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+    navigate("/success", {
+      state: {
+        clientName: user.fullName,
+        truck: {
+          brand: truck_brand,
+          plate: truck_plate,
+          year: "2020",
+          type: "Wing van",
+          fuel: "Diesel",
+        },
+      },
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <LoadingPage
+        onComplete={handleLoadingComplete}
+        brand="SSK TRUCKING"
+        tagline="Client Portal · Loading please wait..."
+        tips={[
+          "Revving up the engines...",
+          "Checking vehicle availability...",
+          "Syncing your account data...",
+          "Almost there! Hang tight...",
+        ]}
+        duration={3000}
+      />
+    );
+  }
+
+  return (
     <div>
       <HomeNavbar user={user} />
       <main className="page">
@@ -222,7 +241,5 @@ export default function RentPage() {
         </div>
       </main>
     </div>
-  ) : (
-    <div>NO CONTENT YET</div>
   );
 }

@@ -40,7 +40,7 @@ export const fetchSpecificTruck = async (truckId) => {
 
 export const fetchAllRelatedTruckToUser = async (id) => {
   const [result] = await db.query(
-    "SELECT A.UID, B.pickup_date, B.return_date, B.pickup_location, B.status, B.note, C.photo_url, C.model, C.plate_number FROM tbl_trip AS A JOIN tbl_transaction AS B ON A.trip_id = B.trip_id JOIN tbl_truck AS C ON A.truck_id = C.truck_id WHERE A.UID = ?",
+    "SELECT A.UID, A.trip_id, B.pickup_date, B.return_date, B.pickup_location, B.status, B.note, C.photo_url, C.model, C.plate_number FROM tbl_trip AS A JOIN tbl_transaction AS B ON A.trip_id = B.trip_id JOIN tbl_truck AS C ON A.truck_id = C.truck_id WHERE A.UID = ?",
     [id],
   );
   return result;

@@ -38,10 +38,10 @@ export default function Truck() {
   useEffect(() => {
     if(!accessToken) return;
     fetchAvailableTrucks();
-  }, [accessToken]);
+  }, []);
 
-  return accessToken ? (
-    <div>
+  return (
+     <div>
       <HomeNavbar user={user}/>
       <main className="page">
         <div className="main-content">
@@ -81,8 +81,6 @@ export default function Truck() {
                     RENT
                   </button>
                   )}
-                 
-                 
                 </div>
               </div>
             ))}
@@ -90,7 +88,5 @@ export default function Truck() {
         </div>
       </main>
     </div>
-  ) : (
-    <div>No Content</div>
-  );
+  )
 }

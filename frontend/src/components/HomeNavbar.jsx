@@ -14,7 +14,7 @@ export default function HomeNavbar({ user }) {
     const path = location.pathname;
     if (path.includes("/trucks")) setActive("trucks");
     else if (path.includes("/contact")) setActive("contact");
-    else setActive("home");
+    else if(path.includes("/home"))setActive("home");
   }, [location]);
 
   const navItems = [

@@ -3,7 +3,7 @@ import HomeNavbar from "../components/HomeNavbar";
 import { useUserAuth } from "../hooks/useUserAuth";
 
 export default function ContactPage() {
-  const { user, accessToken } = useUserAuth();
+  const { user } = useUserAuth();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -43,7 +43,7 @@ export default function ContactPage() {
     }
   };
 
-  return accessToken ? (
+  return (
     <div>
       <HomeNavbar user={user} />
       <main className="page">
@@ -164,7 +164,5 @@ export default function ContactPage() {
         </div>
       </main>
     </div>
-  ) : (
-    <div>NO CONTENT</div>
   );
 }

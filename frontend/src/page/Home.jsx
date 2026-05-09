@@ -5,6 +5,7 @@ import { useUserAuth } from "../hooks/useUserAuth";
 import { useEffect, useState } from "react";
 import { useSocket } from "../hooks/useSocket";
 import { useNavigate } from "react-router-dom";
+import LoadingPage from "../components/LoadingPage";
 
 export default function Home() {
   const { accessToken, authLoading, user } = useUserAuth();
@@ -17,6 +18,7 @@ export default function Home() {
   const [message, setMessage] = useState("");
 
   const fetchAllTruck = async () => {
+
     try {
       const res = await fetch("/api/truck/fetchAllTrucks", {
         method: "GET",
@@ -60,9 +62,10 @@ export default function Home() {
       socket.on("update", handler);
     }
     fetchAllTruck();
-  }, [socket, accessToken, authLoading]);
+  }, [socket, authLoading]);
 
-  return accessToken ? (
+  
+  return (
     <div>
       <HomeNavbar user={user} />
       <main className="page">
@@ -72,7 +75,7 @@ export default function Home() {
             <h1>Truck rentals for every need.</h1>
             <button
               className="btn-rent"
-              onClick={() => (window.location.href = "/trucks")}
+              onClick={() => (navigate("/trucks"))}
             >
               Rent now!
             </button>
@@ -172,7 +175,7 @@ export default function Home() {
         </div>
       </main>
     </div>
-  ) : (
-    <div>No Content</div>
-  );
+  )
+    
+  
 }

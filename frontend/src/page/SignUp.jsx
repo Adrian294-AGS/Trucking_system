@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import LoadingPage from "../components/LoadingPage";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -34,7 +35,6 @@ export default function SignUp() {
       });
       return;
     }
-    setIsLoading(true);
     try {
       const res = await fetch("/api/user/signUp", {
         method: "POST",
@@ -54,13 +54,10 @@ export default function SignUp() {
         });
         return;
       }
-      navigate("/login");
-      alert(signUpRes.message);
+      setIsLoading(true);
     } catch (error) {
       setError("An error occurred during signup.");
-    } finally {
-      setIsLoading(false);
-    }
+    } 
   };
 
   const handleReset = () => {
@@ -72,6 +69,29 @@ export default function SignUp() {
       confirm_password: "",
     });
   };
+
+   const handleLoadingComplete = () => {
+    setIsLoading(false);
+    alert("Success Sign Up");
+    navigate("/login");
+  };
+
+  if (isLoading) {
+      return (
+        <LoadingPage
+          onComplete={handleLoadingComplete}
+          brand="SSK TRUCKING"
+          tagline="Client Portal · Loading please wait..."
+          tips={[
+            "Revving up the engines...",
+            "Checking vehicle availability...",
+            "Syncing your account data...",
+            "Almost there! Hang tight...",
+          ]}
+          duration={3000}
+        />
+      );
+    }
 
   return (
     <div>

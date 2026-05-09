@@ -17,7 +17,7 @@ export default function Navbar() {
       setActive("login");
     } else if (window.location.pathname === "/admin") {
       setActive("admin");
-    }
+    } 
   }, []);
 
   return (
