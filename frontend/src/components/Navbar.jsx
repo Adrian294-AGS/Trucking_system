@@ -8,14 +8,14 @@ export default function Navbar() {
   const navItems = [
     { id: "/", label: "Sign up", path: "/" },
     { id: "login", label: "Log in", path: "/login" },
-    { id: "admin", label: "Admin", path: "/admin" },
+    { id: "admin", label: "Admin", path: "/adminSign" },
   ];
   useEffect(() => {
     if (window.location.pathname === "/") {
       setActive("/");
     } else if (window.location.pathname === "/login") {
       setActive("login");
-    } else if (window.location.pathname === "/admin") {
+    } else if (window.location.pathname === "/adminSign") {
       setActive("admin");
     } 
   }, []);

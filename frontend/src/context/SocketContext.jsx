@@ -7,7 +7,7 @@ export const SocketCreateContext = createContext();
 export default function SocketContext({ children }) {
   const { accessToken, user } = useUserAuth();
   const [socket, setSocket] = useState(null);
-  const userId = user.fullName;
+  const userId = user?.fullName;
 
   useEffect(() => {
     if (!accessToken || !userId) return;
@@ -22,7 +22,7 @@ export default function SocketContext({ children }) {
     tempSocket.emit("user:connect", { userId });
 
     setSocket(tempSocket);
-  }, [accessToken, user.fullName]);
+  }, [accessToken, user]);
 
   return (
     <SocketCreateContext.Provider value={{ socket }}>

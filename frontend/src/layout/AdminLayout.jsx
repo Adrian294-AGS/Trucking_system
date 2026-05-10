@@ -1,0 +1,20 @@
+import React from 'react';
+import AdminNavbar from '../components/admin/AdminNavbar';
+import { Outlet } from 'react-router-dom';
+
+
+export default function AdminLayout({ children, onLogout }) {
+  return (
+    <div className="admin-layout">
+      <AdminNavbar onLogout={onLogout} />
+      <div className="admin-body">
+        <main className="admin-main">
+          <Outlet />
+        </main>
+      </div>
+      <footer className="admin-footer">
+        SSK TRUCKING · <strong>© 2026</strong> All Rights Reserved · Built for Professionals
+      </footer>
+    </div>
+  );
+}

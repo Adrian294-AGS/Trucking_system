@@ -4,6 +4,7 @@ import HomeNavbar from "../components/HomeNavbar";
 import truckingLogo from "@/assets/truck-highway-sunny-sky.jpg";
 import { useNavigate, Link } from "react-router-dom";
 import { useUserAuth } from "../hooks/useUserAuth";
+import WarningPage from "../components/WarningPage";
 
 export default function Truck() {
   const navigate = useNavigate();
@@ -34,9 +35,9 @@ export default function Truck() {
       console.log("fetchAvailableTrucks ERROR: ", error);
     }
   }
-  
+  if(!accessToken) return (<WarningPage />);
   useEffect(() => {
-    if(!accessToken) return;
+    
     fetchAvailableTrucks();
   }, []);
 

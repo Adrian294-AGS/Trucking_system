@@ -13,23 +13,27 @@ import Orders from "./page/Orders";
 import ContactPage from "./page/ContactPage";
 import LoadingPage from "./components/LoadingPage";
 import WarningPage from "./components/WarningPage";
+import AdminLayout from "./layout/AdminLayout";
+import OrderPage from "./page/Admin/OrderPage";
+
+const ProtectedRoute = ({ children, allowedRole }) => {
+  const { user, authLoading } = useUserAuth(); // ✅ grab authLoading
+
+  if (authLoading) return null; // or a spinner
+
+  if (allowedRole && user?.role !== allowedRole) return <WarningPage />;
+  return children;
+};
 
 function App() {
   const { refreshLoad, setRefreshLoad } = useUserAuth();
-  const ProtectedRoute = ({ Children, allowedRole }) => {
-    const { user } = useUserAuth();
-    if (!user) {
-      return <Navigate to={"/"} replace />;
-    }
-    if (allowedRole && user.role !== allowedRole)
-      return <Navigate to={"/home"} replace />;
-    return Children;
+
+  const handleLogout = () => {
+    logout();
   };
 
-   const handleLoadingComplete = () => {
-    setRefreshLoad(
-      (prev) => (prev === "refreshLoad" ? null : prev)
-   );
+  const handleLoadingComplete = () => {
+    setRefreshLoad((prev) => (prev === "refreshLoad" ? null : prev));
   };
 
   if (refreshLoad === "refreshLoad") {
@@ -47,12 +51,12 @@ function App() {
         duration={3000}
       />
     );
-  } else if(refreshLoad === "unauthorized"){
+  } else if (refreshLoad === "unauthorized") {
     return (
       <div>
         <WarningPage />
       </div>
-    )
+    );
   }
 
   return (
@@ -69,19 +73,32 @@ function App() {
             }}
           >
             <Routes>
+              {/* Client Routes */}
               <Route path="/" element={<SignUp />} />
               <Route path="/login" element={<SignIn />} />
-              <Route path="/admin" element={<AdminSignIn />} />
               <Route path="/rent" element={<RentPage />} />
               <Route path="/home" element={<Home />} />
               <Route path="/trucks" element={<Truck />} />
               <Route path="/success" element={<NotificationPage />} />
               <Route path="/orders" element={<Orders />} />
               <Route path="/contact" element={<ContactPage />} />
+
+              {/* Admin Routes */}
+              <Route path="/adminSign" element={<AdminSignIn />} />
+              <Route
+                path="/admin"
+                element={<AdminLayout onLogout={handleLogout} />}
+              >
+                <Route path="orders" element={<ProtectedRoute allowedRole={"Admin"}>
+                  <OrderPage />
+                </ProtectedRoute>} />
+                <Route path="vehicles" element={<div>Vehicles Page</div>} />
+                <Route path="dashboard" element={<div>Dashboard Page</div>} />
+                <Route path="userlog" element={<div>User Log Page</div>} />
+              </Route>
             </Routes>
           </div>
         </BrowserRouter>
-        
       </div>
     </>
   );

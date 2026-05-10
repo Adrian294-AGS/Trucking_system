@@ -1,11 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function WarningPage({ 
   onSignIn, 
   message = "You need to sign in to access this page.",
   subMessage = "Please log in to your SSK Trucking account to continue."
 }) {
-
+  const navigate = useNavigate();
   const handleGoBack = () => {
     window.history.back();
   };

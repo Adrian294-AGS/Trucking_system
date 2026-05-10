@@ -2,12 +2,15 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
+import { useUserAuth } from "../../hooks/useUserAuth";
+import LoadingPage from "../../components/LoadingPage";
 
 export default function AdminSignIn() {
   const navigate = useNavigate();
+  const { logInAuth } = useUserAuth();
   const [formData, setFormData] = useState({
     email: "",
-    admin_password: "",
+    password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -22,10 +25,9 @@ export default function AdminSignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setIsLoading(true);
 
     try {
-      const res = await fetch("/api/admin/signIn", {
+      const res = await fetch("/api/user/signIn", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,20 +39,46 @@ export default function AdminSignIn() {
       const result = await res.json();
 
       if (!result.success) {
-        setFormData({ email: "", admin_password: "" });
+        setFormData({ email: "", password: "" });
         setError(result.message || "Admin login failed. Please try again.");
         return;
       };
-      navigate("/home");
-      alert(result.message);
+      if(result.role === "user"){
+        setError("Admin Only");
+        setFormData({ email: "", password: "" });
+        return;
+      };
+      setIsLoading(true);
+      logInAuth(result.accessToken);
+     
     } catch (err) {
       setError(
         err.message || "Admin login failed. Please check your credentials.",
       );
-    } finally {
-      setIsLoading(false);
-    }
+    } 
   };
+
+   const handleLoadingComplete = () => {
+      navigate("/admin/orders");
+    };
+  
+    if (isLoading) {
+      return (
+        <LoadingPage
+          onComplete={handleLoadingComplete}
+          brand="SSK TRUCKING"
+          tagline="Client Portal · Loading please wait..."
+          tips={[
+            "Revving up the engines...",
+            "Checking vehicle availability...",
+            "Syncing your account data...",
+            "Almost there! Hang tight...",
+          ]}
+          duration={3000}
+        />
+      );
+    }
+
 
   return (
    <div>
@@ -86,8 +114,8 @@ export default function AdminSignIn() {
               <input
                 type="password"
                 id="admin-password"
-                name="admin_password"
-                value={formData.admin_password}
+                name="password"
+                value={formData.password}
                 onChange={handleChange}
                 required
               />

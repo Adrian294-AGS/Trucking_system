@@ -33,6 +33,7 @@ export default function SignIn() {
         setFormData({ email: "", password: "" });
         return;
       }
+
       setIsLoading(true);
       logInAuth(signInRes.accessToken);
     } catch (err) {

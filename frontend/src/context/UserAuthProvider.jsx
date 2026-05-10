@@ -5,15 +5,7 @@ export const UserAuthContext = createContext();
 export const UserAuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState("");
   const [authLoading, setAuthLoading] = useState(true);
-  const [user, setUser] = useState({
-    UID: "",
-    fullName: "",
-    email: "",
-    photo: "",
-    role: "",
-    phone: "",
-    address: "Santiago City, Isabela",
-  });
+  const [user, setUser] = useState(null);
   const [refreshLoad, setRefreshLoad] = useState("");
 
   const fetchUserInfo = async (token) => {
@@ -32,15 +24,16 @@ export const UserAuthProvider = ({ children }) => {
         alert(userInfo.message);
         return;
       }
-      setUser({
-        ...user,
+      setUser((prev) => ({
+        ...(prev || {}), // handles null initial state
         UID: userInfo.UID,
         fullName: userInfo.username,
         photo: userInfo.photo,
         role: userInfo.role,
         email: userInfo.email,
         phone: userInfo.phoneNumber,
-      });
+        address: "Santiago City, Isabela",
+      }));
     } catch (error) {
       console.log("logInAuth ERROR: ", error);
     }
@@ -59,6 +52,7 @@ export const UserAuthProvider = ({ children }) => {
       });
 
       const result = await res.json();
+      setUser(null);
       alert(result.message);
     } catch (error) {
       console.log("logOut ERROR: ", error);
@@ -69,7 +63,7 @@ export const UserAuthProvider = ({ children }) => {
     if (
       window.location.pathname === "/" ||
       window.location.pathname === "/login" ||
-      window.location.pathname === "/admin"
+      window.location.pathname === "/adminSign"
     ) {
       setAuthLoading(false);
       return;
@@ -110,7 +104,7 @@ export const UserAuthProvider = ({ children }) => {
         logout,
         setAccessToken,
         refreshLoad,
-        setRefreshLoad
+        setRefreshLoad,
       }}
     >
       {children}
