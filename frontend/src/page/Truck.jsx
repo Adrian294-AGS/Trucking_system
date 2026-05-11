@@ -55,6 +55,7 @@ export default function Truck() {
                   <img
                     src={`${import.meta.env.VITE_API_URL}/${truck.photo_url}`}
                     alt={`${truck.brand} ${truck.truck_type}`}
+                    onError={(e) => (e.target.src = 'https://placehold.co/220x160/1e3050/ffffff?text=No+Image')}
                   />
                 </div>
                 <div className="truck-info">

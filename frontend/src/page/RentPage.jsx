@@ -145,6 +145,7 @@ export default function RentPage() {
                 <img
                   src={`${import.meta.env.VITE_API_URL}/${truck_photo}`}
                   alt="Isuzu Wing Truck"
+                  onError={(e) => (e.target.src = 'https://placehold.co/220x160/1e3050/ffffff?text=No+Image')}
                 />
               </div>
               <div className="truck-preview-info">

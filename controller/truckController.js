@@ -69,13 +69,12 @@ export const rentTruck = async (req, res) => {
       amount: 0.0,
       pickup_date: pickup_date,
       return_date: return_date,
-      status: "reserved",
+      status: "Pending",
       pickup_location: pickup_location,
       note: notes,
     };
 
     await updateTruck("tbl_truck", {on_trip: 1}, truck_id);
-
     await insertToDatabase("tbl_transaction", transac);
 
     return res

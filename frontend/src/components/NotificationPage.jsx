@@ -2,14 +2,16 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import HomeNavbar from "./HomeNavbar";
 import truckingLogo from "@/assets/ssk_trucking_white.png";
+import { useUserAuth } from "../hooks/useUserAuth";
 
 export default function NotificationPage() {
+  const { user } = useUserAuth();
   const location = useLocation();
   const data = location.state;
  
   return (
     <div>
-      <HomeNavbar />
+      <HomeNavbar user={user}/>
       <main className="page">
         <div className="page-content">
           <div className="success-card">

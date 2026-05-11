@@ -2363,15 +2363,15 @@ body {
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
-.status-badge.pending {
+.status-badge.Pending {
   background: var(--status-pending-bg);
   color: var(--status-pending-text);
 }
-.status-badge.active {
+.status-badge.Approved {
   background: var(--status-active-bg);
   color: var(--status-active-text);
 }
-.status-badge.complete {
+.status-badge.Complete {
   background: var(--status-complete-bg);
   color: var(--status-complete-text);
 }
@@ -2435,3 +2435,160 @@ body {
     background: transparent;
   }
 }
+
+
+/* ── EDIT ORDER PAGE ── */
+.edit-layout {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+}
+
+.truck-preview {
+  flex-shrink: 0;
+  width: 220px;
+}
+
+.truck-preview .status-bar {
+  background: var(--admin-accent);
+  color: var(--admin-navy);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 4px 4px 0 0;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.truck-preview img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+  border-radius: 0 0 4px 4px;
+  border: 1px solid var(--admin-border);
+}
+
+.order-form { flex: 1; }
+
+.form-section-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--admin-accent);
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.form-group { margin-bottom: 16px; }
+
+.form-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--admin-text-muted);
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  background: var(--admin-navy);
+  border: 1px solid var(--admin-border);
+  border-radius: 4px;
+  color: var(--admin-text-light);
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  padding: 9px 12px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: var(--admin-accent);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.form-group select option {
+  background: var(--admin-navy-light);
+  color: var(--admin-text-light);
+}
+
+.date-input-wrap {
+  position: relative;
+}
+
+.date-input-wrap input { padding-right: 38px; }
+
+.date-input-wrap .cal-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--admin-text-muted);
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.amount-status-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.amount-status-row .form-group {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.btn-save {
+  width: 100%;
+  padding: 11px;
+  background: var(--admin-accent);
+  border: none;
+  border-radius: 4px;
+  color: var(--admin-navy);
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-save:hover { background: #d49015; }
+
+.btn-cancel {
+  width: 100%;
+  padding: 11px;
+  background: transparent;
+  border: 1px solid var(--admin-border);
+  border-radius: 4px;
+  color: var(--admin-text-muted);
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  text-decoration: none;
+  text-align: center;
+  display: block;
+}
+.btn-cancel:hover { background: var(--admin-border); color: var(--admin-text-light); }

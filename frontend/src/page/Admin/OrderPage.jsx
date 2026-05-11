@@ -1,8 +1,8 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useUserAuth } from '../../hooks/useUserAuth';
-import WarningPage from '../../components/WarningPage';
+import React from "react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useUserAuth } from "../../hooks/useUserAuth";
+import WarningPage from "../../components/WarningPage";
 
 export default function OrdersPage() {
   const navigate = useNavigate();
@@ -10,18 +10,30 @@ export default function OrdersPage() {
   const [order, setOrder] = useState([]);
 
   const formatCurrency = (amount) => `₱${amount.toLocaleString()}`;
-  const formatDate = (dateStr) => new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const formatDate = (dateStr) =>
+    new Date(dateStr).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    });
 
-  if(!accessToken) return (<WarningPage />);
+  const handleDelete = async (id) => {
+    try {
+      console.log("Handle Delete: ", id);
+    } catch (error) {
+      console.log("Hande Delete ERROR: ", error);
+    }
+  }
+
+  if (!accessToken) return <WarningPage />;
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const res = await fetch("/api/admin/getOrders", {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${accessToken}`
+            Authorization: `Bearer ${accessToken}`,
           },
-          credentials: "include"
+          credentials: "include",
         });
 
         const result = await res.json();
@@ -29,15 +41,23 @@ export default function OrdersPage() {
       } catch (error) {
         console.log("fetchOrders ERROR: ", error);
       }
-    }
+    };
     fetchOrders();
   }, []);
 
   return (
     <>
       <div className="admin-page-header">
-        <h1 className="admin-page-title"><span></span>Rental Orders</h1>
-        <Link to="/admin/add-order" className="btn-edit" style={{ padding: '8px 16px' }}>+ Add Order</Link>
+        <h1 className="admin-page-title">
+          <span></span>Rental Orders
+        </h1>
+        <Link
+          to="/admin/add-order"
+          className="btn-edit"
+          style={{ padding: "8px 16px" }}
+        >
+          + Add Order
+        </Link>
       </div>
 
       <div className="admin-table-wrapper">
@@ -62,14 +82,37 @@ export default function OrdersPage() {
                 <td>{t.model}</td>
                 <td>{formatDate(t.pickup_date)}</td>
                 <td>{formatDate(t.return_date)}</td>
-                <td>{formatCurrency(t.amount)}</td>
+                <td>{formatCurrency(Number(t.amount))}</td>
                 <td>
                   <span className={`status-badge ${t.status}`}>
                     {t.status.charAt(0).toUpperCase() + t.status.slice(1)}
                   </span>
                 </td>
                 <td>
-                  <button className="btn-edit" onClick={() => navigate("/editOrder", {state: {status: t.status, model: t.model, pickup_date: t.pickup_date, return_date: t.return_date, pickup_location: t.pickup_location, note: t.note}})}>Edit</button>
+                  <div style={{ display: "flex", gap: "9px" }}>
+                    <button
+                      className="btn-edit"
+                      onClick={() =>
+                        navigate("/admin/editOrder", {
+                          state: {
+                            status: t.status,
+                            model: t.model,
+                            pickup_date: t.pickup_date,
+                            return_date: t.return_date,
+                            pickup_location: t.pickup_location,
+                            note: t.note,
+                            photo: t.photo_url,
+                            transac_id: t.transac_id,
+                          },
+                        })
+                      }
+                    >
+                      Edit
+                    </button>
+                    {t.status === "Complete" && (
+                      <button className="btn-edit" onClick={() => handleDelete(t.trip_id)}>Delete 🗑️</button>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}

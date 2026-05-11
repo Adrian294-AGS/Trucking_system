@@ -116,3 +116,13 @@ export const fetchOrders = async () => {
   );
   return result;
 };
+
+export const updateTblTransac = async (id, up) => {
+  const [result] = await db.query("UPDATE tbl_transaction SET ? WHERE transac_id = ?", [up, id]);
+  return result;
+};
+
+export const deleteOrders = async (id) => {
+  const [result] = await db.query("DELETE FROM tbl_trip WHERE trip_id = ?", [id]);
+  return result;
+}

@@ -39,7 +39,7 @@ export default function ProfilePanel({ isOpen, onClose, user }) {
 
   const handleLogout = () => {
     logout();
-    navigate("/");
+    navigate("/login");
     // Clear auth tokens, redirect to login, etc.
   };
 

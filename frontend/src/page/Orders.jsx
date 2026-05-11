@@ -65,7 +65,6 @@ export default function Orders() {
                         Plate: {order.plate_number}
                       </div>
                     </div>
-                    <div className="truck-status available">Available</div>
                   </div>
 
                   <div className="order-form-box">
@@ -108,6 +107,16 @@ export default function Orders() {
                       value={order.note}
                       readOnly
                     />
+
+                    {order.status === "Approved" || order.status === "Complete" ? (
+                      <button type="submit" className="btn-rent-submit" style={{backgroundColor: "red"}}>
+                        {order.status}👌
+                      </button>
+                    ) : (
+                      <button type="submit" className="btn-rent-submit">
+                        ...Pending
+                      </button>
+                    )}
                   </div>
                 </div>
               ))

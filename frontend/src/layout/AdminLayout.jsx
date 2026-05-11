@@ -1,5 +1,6 @@
 import React from 'react';
 import AdminNavbar from '../components/admin/AdminNavbar';
+import AdminSidebar from '../components/admin/AdminSidebar';
 import { Outlet } from 'react-router-dom';
 
 
@@ -8,6 +9,7 @@ export default function AdminLayout({ children }) {
     <div className="admin-layout">
       <AdminNavbar />
       <div className="admin-body">
+        <AdminSidebar />
         <main className="admin-main">
           <Outlet />
         </main>

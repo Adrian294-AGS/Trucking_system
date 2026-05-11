@@ -1,4 +1,4 @@
-import { fetchOrders } from "../model/sqlQuery.js";
+import { fetchOrders, updateTblTransac, deleteOrders } from "../model/sqlQuery.js";
 
 export const getOrdersForAdmin = async (req, res) => {
   try {
@@ -8,4 +8,27 @@ export const getOrdersForAdmin = async (req, res) => {
     console.log("getOrdersForAdmin ERROR: ", error);
     return res.status(500).json({success: false, message: "SERVER ERROR"});
   }
+};
+
+export const updateOrders = async (req, res) => {
+  const { transac_id, pickupDate, returnDate, pickupLocation, notes, amount, status} = req.body;
+  const up = {
+    amount,
+    pickup_date: pickupDate,
+    return_date: returnDate,
+    status,
+    pickup_location: pickupLocation,
+    note: notes
+  };
+  try {
+    const updateRes = await updateTblTransac(transac_id, up);
+    return res.status(201).json({success: true, message: "Successfully Updated"});
+  } catch (error) {
+    console.log("updateOrders ERROR: ", error);
+    return res.status(500).json({success: false, message: "Server Error"});
+  }
+};
+
+export const deleteOrder = async (req, res) => {
+
 }
