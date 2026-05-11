@@ -1,16 +1,37 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useUserAuth } from '../../hooks/useUserAuth';
+import WarningPage from '../../components/WarningPage';
 
 export default function OrdersPage() {
-  // 🔹 Replace with API fetch in production
-  const orders = [
-    { id: 1, customer: 'alexandrie', truck: 'Isuzu', pickup: '2026-05-01', return: '2026-05-10', total: 10000, status: 'pending' },
-    { id: 2, customer: 'adrian', truck: 'Hino', pickup: '2026-03-25', return: '2026-03-29', total: 20000, status: 'active' },
-    { id: 3, customer: 'maria', truck: 'Mitsubishi', pickup: '2026-04-10', return: '2026-04-15', total: 15000, status: 'complete' }
-  ];
+  const navigate = useNavigate();
+  const { accessToken, authLoading } = useUserAuth();
+  const [order, setOrder] = useState([]);
 
   const formatCurrency = (amount) => `₱${amount.toLocaleString()}`;
   const formatDate = (dateStr) => new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+  if(!accessToken) return (<WarningPage />);
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const res = await fetch("/api/admin/getOrders", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          },
+          credentials: "include"
+        });
+
+        const result = await res.json();
+        setOrder(result.vehicle);
+      } catch (error) {
+        console.log("fetchOrders ERROR: ", error);
+      }
+    }
+    fetchOrders();
+  }, []);
 
   return (
     <>
@@ -34,21 +55,21 @@ export default function OrdersPage() {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (
-              <tr key={order.id}>
-                <td>{order.id}</td>
-                <td>{order.customer}</td>
-                <td>{order.truck}</td>
-                <td>{formatDate(order.pickup)}</td>
-                <td>{formatDate(order.return)}</td>
-                <td>{formatCurrency(order.total)}</td>
+            {order.map((t) => (
+              <tr key={t.trip_id}>
+                <td>{t.trip_id}</td>
+                <td>{t.username}</td>
+                <td>{t.model}</td>
+                <td>{formatDate(t.pickup_date)}</td>
+                <td>{formatDate(t.return_date)}</td>
+                <td>{formatCurrency(t.amount)}</td>
                 <td>
-                  <span className={`status-badge ${order.status}`}>
-                    {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                  <span className={`status-badge ${t.status}`}>
+                    {t.status.charAt(0).toUpperCase() + t.status.slice(1)}
                   </span>
                 </td>
                 <td>
-                  <Link to={`/admin/orders/edit/${order.id}`} className="btn-edit">Edit</Link>
+                  <button className="btn-edit" onClick={() => navigate("/editOrder", {state: {status: t.status, model: t.model, pickup_date: t.pickup_date, return_date: t.return_date, pickup_location: t.pickup_location, note: t.note}})}>Edit</button>
                 </td>
               </tr>
             ))}

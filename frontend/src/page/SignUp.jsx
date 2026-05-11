@@ -3,9 +3,11 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import LoadingPage from "../components/LoadingPage";
+import { useToast } from "../context/ToastContext";
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     full_name: "",
     email: "",
@@ -27,7 +29,7 @@ export default function SignUp() {
     e.preventDefault();
 
     if (formData.password !== formData.confirm_password) {
-      alert("Passwords do not match.");
+      showToast("warning", "signUp", "Passwords do not match.");
       setFormData({
         ...formData,
         password: "",
@@ -44,7 +46,7 @@ export default function SignUp() {
 
       const signUpRes = await res.json();
       if (!signUpRes.success) {
-        setError(signUpRes.message);
+        showToast("warning", "SignUp", signUpRes.message);
         setFormData({
           full_name: "",
           email: "",

@@ -1,8 +1,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
+import { useToast } from "./ToastContext";
 export const UserAuthContext = createContext();
 
 export const UserAuthProvider = ({ children }) => {
+  const { showToast } = useToast();
   const [accessToken, setAccessToken] = useState("");
   const [authLoading, setAuthLoading] = useState(true);
   const [user, setUser] = useState(null);
@@ -53,7 +55,8 @@ export const UserAuthProvider = ({ children }) => {
 
       const result = await res.json();
       setUser(null);
-      alert(result.message);
+      setAccessToken(null);
+      showToast("success", "Log-out", result.message);
     } catch (error) {
       console.log("logOut ERROR: ", error);
     }

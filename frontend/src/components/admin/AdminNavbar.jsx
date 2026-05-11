@@ -1,9 +1,17 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import truckingLogo from '@/assets/ssk_trucking_white.png';
+import { useUserAuth } from '../../hooks/useUserAuth';
 
-export default function AdminNavbar({ onLogout }) {
+export default function AdminNavbar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { logout } = useUserAuth();
+
+  const onLogout = () => {
+    logout();
+    navigate("/login");
+  }
   
   const navLinks = [
     { id: 'dashboard', label: 'Dashboard', path: '/admin/dashboard' },

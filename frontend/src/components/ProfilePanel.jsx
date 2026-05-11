@@ -38,9 +38,7 @@ export default function ProfilePanel({ isOpen, onClose, user }) {
     : "AA";
 
   const handleLogout = () => {
-    console.log("Logging out...");
     logout();
-    setAccessToken("");
     navigate("/");
     // Clear auth tokens, redirect to login, etc.
   };

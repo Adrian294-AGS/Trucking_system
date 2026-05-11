@@ -108,3 +108,11 @@ export const fetchUserLogs = async () => {
   );
   return result;
 };
+
+// Admin Actions
+export const fetchOrders = async () => {
+  const [result] = await db.query(
+    "SELECT A.username, B.trip_id, C.model, C.photo_url, D.transac_id, D.pickup_date, D.return_date, D.pickup_location, D.note, D.amount, D.status FROM tbl_users AS A JOIN tbl_trip AS B ON A.UID = B.UID JOIN tbl_truck AS C ON B.truck_id = C.truck_id JOIN tbl_transaction AS D ON B.trip_id = D.trip_id",
+  );
+  return result;
+};

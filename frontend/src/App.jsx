@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import "./app.css";
 import Footer from "./components/Footer";
 import SignIn from "./page/SignIn";
@@ -17,7 +17,7 @@ import AdminLayout from "./layout/AdminLayout";
 import OrderPage from "./page/Admin/OrderPage";
 
 const ProtectedRoute = ({ children, allowedRole }) => {
-  const { user, authLoading } = useUserAuth(); // ✅ grab authLoading
+  const { user, authLoading, logout } = useUserAuth(); // ✅ grab authLoading
 
   if (authLoading) return null; // or a spinner
 
@@ -27,10 +27,6 @@ const ProtectedRoute = ({ children, allowedRole }) => {
 
 function App() {
   const { refreshLoad, setRefreshLoad } = useUserAuth();
-
-  const handleLogout = () => {
-    logout();
-  };
 
   const handleLoadingComplete = () => {
     setRefreshLoad((prev) => (prev === "refreshLoad" ? null : prev));
@@ -87,7 +83,7 @@ function App() {
               <Route path="/adminSign" element={<AdminSignIn />} />
               <Route
                 path="/admin"
-                element={<AdminLayout onLogout={handleLogout} />}
+                element={<AdminLayout />}
               >
                 <Route path="orders" element={<ProtectedRoute allowedRole={"Admin"}>
                   <OrderPage />

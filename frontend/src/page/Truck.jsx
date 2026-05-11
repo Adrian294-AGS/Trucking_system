@@ -37,7 +37,6 @@ export default function Truck() {
   }
   if(!accessToken) return (<WarningPage />);
   useEffect(() => {
-    
     fetchAvailableTrucks();
   }, []);
 

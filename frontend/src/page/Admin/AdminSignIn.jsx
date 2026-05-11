@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import { useUserAuth } from "../../hooks/useUserAuth";
 import LoadingPage from "../../components/LoadingPage";
+import { useToast } from "../../context/ToastContext";
 
 export default function AdminSignIn() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const { logInAuth } = useUserAuth();
   const [formData, setFormData] = useState({
     email: "",
@@ -40,11 +42,11 @@ export default function AdminSignIn() {
 
       if (!result.success) {
         setFormData({ email: "", password: "" });
-        setError(result.message || "Admin login failed. Please try again.");
+        showToast("warning", "SignIn", result.message || "Admin login failed. Please try again.");
         return;
       };
       if(result.role === "user"){
-        setError("Admin Only");
+        showToast("warning", "signUp", "This page is for Admin Only");
         setFormData({ email: "", password: "" });
         return;
       };

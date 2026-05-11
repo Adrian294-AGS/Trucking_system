@@ -8,7 +8,7 @@ export default function WarningPage({
 }) {
   const navigate = useNavigate();
   const handleGoBack = () => {
-    window.history.back();
+    navigate("/login");
   };
 
   return (
@@ -60,7 +60,7 @@ export default function WarningPage({
         {/* Action Buttons */}
         <div className="warn-actions">
           <button className="btn-warn-secondary" onClick={handleGoBack}>
-            ← Go Back
+            ← Log-In
           </button>
         </div>
 

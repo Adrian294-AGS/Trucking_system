@@ -3,10 +3,10 @@ import AdminNavbar from '../components/admin/AdminNavbar';
 import { Outlet } from 'react-router-dom';
 
 
-export default function AdminLayout({ children, onLogout }) {
+export default function AdminLayout({ children }) {
   return (
     <div className="admin-layout">
-      <AdminNavbar onLogout={onLogout} />
+      <AdminNavbar />
       <div className="admin-body">
         <main className="admin-main">
           <Outlet />

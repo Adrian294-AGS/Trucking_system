@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import authRoute from "../routes/authRoute.js";
 import truckRoute from "../routes/truckRoute.js";
+import adminRoute from "../routes/adminRoute.js";
 import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
@@ -37,6 +38,7 @@ io.on("connection", (socket) => {
 
 app.use("/api/user", authRoute);
 app.use("/api/truck", truckRoute);
+app.use("/api/admin", adminRoute);
 
 server.listen(port, () => {
   console.log("server running http://localhost:5000");

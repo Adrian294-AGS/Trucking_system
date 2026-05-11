@@ -126,7 +126,7 @@ export const refreshToken = async (req, res) => {
     if(!user){
       return res.status(401).json({success: false, message: "Unauthorized Access; Malformed Token"});
     }
-    const payload = {UID: user.UID, email: user.email};
+    const payload = {UID: user.UID, email: user.email, role: user.role};
     const accessToken = await userGenerateAccessToken(payload);
     return res.status(200).json({success: true, accessToken});
   } catch (error) {

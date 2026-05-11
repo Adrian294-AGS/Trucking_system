@@ -4,9 +4,11 @@ import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useUserAuth } from "../hooks/useUserAuth";
 import LoadingPage from "../components/LoadingPage";
+import { useToast } from "../context/ToastContext";
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const { logInAuth } = useUserAuth();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
@@ -29,11 +31,10 @@ export default function SignIn() {
       });
       const signInRes = await res.json();
       if (!signInRes.success) {
-        setError(signInRes.message);
+        showToast("error", "SignIn", signInRes.message);
         setFormData({ email: "", password: "" });
         return;
       }
-
       setIsLoading(true);
       logInAuth(signInRes.accessToken);
     } catch (err) {
@@ -43,7 +44,7 @@ export default function SignIn() {
   };
 
   const handleLoadingComplete = () => {
-    navigate("/Home");
+    navigate("/home");
   };
 
   if (isLoading) {
