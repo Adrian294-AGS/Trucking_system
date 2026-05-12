@@ -6,11 +6,12 @@ import { useEffect, useState } from "react";
 import { useSocket } from "../hooks/useSocket";
 import { useNavigate } from "react-router-dom";
 import LoadingPage from "../components/LoadingPage";
+import useNotif from "../hooks/useNotif";
 
 export default function Home() {
   const { accessToken, authLoading, user } = useUserAuth();
-  const { socket } = useSocket();
   const navigate = useNavigate();
+  const { update } = useNotif();
   const [availableTrucks, setAvailableTrucks] = useState([]);
   const [maintenanceTrucks, setMaintenanceTrucks] = useState([]);
   const [unavailableTrucks, setUnavailableTrucks] = useState([]);
@@ -55,14 +56,8 @@ export default function Home() {
   };
   useEffect(() => {
     if (authLoading || !accessToken) return;
-    if (socket) {
-      const handler = ({ message }) => {
-        setMessage(message);
-      };
-      socket.on("update", handler);
-    }
     fetchAllTruck();
-  }, [socket, authLoading]);
+  }, [authLoading, update]);
 
   
   return (

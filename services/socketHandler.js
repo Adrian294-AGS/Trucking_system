@@ -5,15 +5,13 @@ export const socketHandler = (io, socket) => {
         console.log(`Socket Connection: user:${userId}`);
     });
 
-    socket.on("update", ({changes}) => {
-        try {
-            if(changes == true){
-                socket.broadcast.emit("update", {
-                    message: "Updating Pages"
-                });
-            }
-        } catch (error) {
-            console.log("Socket update ERROR: ", error);
-        }
+    socket.on("update", () => {
+       io.emit("update");
+    })
+
+    socket.on("order:update", ({id, message}) => {
+        io.to(`user:${id}`).emit("order:update", {
+            message: message
+        });
     })
 }

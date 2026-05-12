@@ -9,7 +9,6 @@ import http from "http";
 import { Server } from "socket.io";
 import { socketHandler } from "../services/socketHandler.js";
 
-
 dotenv.config();
 const app = express();
 const port = process.env.PORT;

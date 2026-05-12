@@ -21,6 +21,19 @@
   --bg-input-gray-dark: #666;
   --border-color: #ddd;
   --border-color-dark: #bbb;
+   --navy:    #0d1b2a;
+  --navy2:   #162032;
+  --blue:    #1a4a7a;
+  --accent:  #e8a020;
+  --white:   #f5f7fa;
+  --gray:    #8a9ab0;
+  --border:  #1e3050;
+  --green:   #1e7a45;
+  --green-bg:#d4f0e0;
+  --orange:  #b06010;
+  --orange-bg:#fdecd0;
+  --red:     #a01a1a;
+  --red-bg:  #f5d4d4;
 }
 
 /* ── RESET & BASE ── */
@@ -2592,3 +2605,210 @@ body {
   display: block;
 }
 .btn-cancel:hover { background: var(--admin-border); color: var(--admin-text-light); }
+
+/* ── ADMIN VEHICLE LIST (Exact match to Vehiclelist.css) ── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--white);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+}
+
+.page-title span {
+  display: inline-block;
+  width: 4px;
+  height: 20px;
+  background: var(--accent);
+  border-radius: 2px;
+  margin-right: 10px;
+}
+
+.btn-add {
+  padding: 8px 16px;
+  background: var(--accent);
+  border: none;
+  border-radius: 4px;
+  color: var(--navy);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.btn-add:hover { background: #d49015; }
+
+.info-table {
+  overflow-x: auto;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+.info-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.info-table thead { background: var(--navy); }
+.info-table th {
+  padding: 13px 18px;
+  text-align: left;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  border-bottom: 1px solid var(--border);
+}
+.info-table th:first-child { width: 50px; }
+
+.info-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.info-table tbody tr:last-child { border-bottom: none; }
+.info-table tbody tr:hover { background: rgba(255,255,255,0.03); }
+
+.info-table td {
+  padding: 14px 18px;
+  color: var(--white);
+  font-weight: 500;
+}
+.info-table td:first-child { color: var(--gray); font-size: 13px; }
+
+/* Status Badges */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.status.available { background: var(--green-bg); color: var(--green); }
+.status.available::before { background: var(--green); }
+.status.maintenance { background: var(--orange-bg); color: var(--orange); }
+.status.maintenance::before { background: var(--orange); }
+.status.unavailable { background: var(--red-bg); color: var(--red); }
+.status.unavailable::before { background: var(--red); }
+
+/* Edit Button */
+.edit-button {
+  display: inline-block;
+  padding: 6px 18px;
+  background: transparent;
+  border: 1px solid var(--blue);
+  color: var(--white);
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+.edit-button:hover {
+  background: var(--blue);
+  border-color: var(--blue);
+}
+
+/* ── DASHBOARD EXTRAS ── */
+.btn-admin-back {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(255, 255, 255, 0.12); color: white;
+  border: 1.5px solid rgba(255, 255, 255, 0.5); border-radius: 4px;
+  padding: 6px 14px; font-family: 'Barlow', sans-serif;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.5px;
+  text-decoration: none; text-transform: uppercase; cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s; white-space: nowrap;
+}
+.btn-admin-back:hover {
+  background: rgba(255, 255, 255, 0.25); border-color: white; transform: translateX(-2px);
+}
+.btn-admin-back .shield { font-size: 14px; line-height: 1; }
+
+.admin-badge {
+  background: white; color: var(--primary-red); font-size: 9px; font-weight: 800;
+  letter-spacing: 1.5px; text-transform: uppercase; padding: 2px 6px;
+  border-radius: 3px; margin-left: 2px; vertical-align: middle;
+}
+
+/* 2-column grid override for maintenance/unavailable rows */
+.grid-2col { grid-template-columns: repeat(2, 1fr) !important; }
+
+/* ── ORDERS PAGE RESPONSIVE ENHANCEMENTS ── */
+.table-actions {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+
+.btn-delete {
+  border-color: #e05555;
+  color: #e05555;
+}
+.btn-delete:hover {
+  background: #e05555;
+  color: white;
+  border-color: #e05555;
+}
+
+.empty-row {
+  text-align: center;
+  padding: 32px !important;
+  color: var(--admin-text-muted);
+  font-style: italic;
+}
+
+/* Custom scrollbar for table wrapper */
+.admin-table-wrapper::-webkit-scrollbar { height: 6px; }
+.admin-table-wrapper::-webkit-scrollbar-track { background: var(--admin-navy); }
+.admin-table-wrapper::-webkit-scrollbar-thumb { background: var(--admin-accent); border-radius: 3px; }
+
+/* ── MEDIA QUERIES ── */
+@media (max-width: 900px) {
+  .admin-body { flex-direction: column; padding: 16px; }
+  .admin-sidebar { width: 100%; height: auto; padding: 8px 0; display: flex; flex-wrap: wrap; gap: 4px; }
+  .admin-sidebar a { flex: 1; text-align: center; border-left: none; border-bottom: 2px solid transparent; padding: 8px; }
+  .admin-sidebar a.active { border-bottom-color: var(--admin-accent); background: transparent; }
+}
+
+@media (max-width: 768px) {
+  .admin-page-header { flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .admin-page-header .btn-edit { width: 100%; text-align: center; padding: 10px 16px; }
+  
+  .admin-table th, .admin-table td { padding: 12px 10px; font-size: 13px; }
+  .status-badge { padding: 4px 8px; font-size: 11px; }
+  
+  .table-actions { flex-direction: column; gap: 6px; }
+  .btn-edit { width: 100%; padding: 8px 12px; font-size: 12px; }
+  .admin-table-wrapper { border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+}
+
+@media (max-width: 480px) {
+  .admin-page-title { font-size: 20px; }
+  .admin-table th:first-child, .admin-table td:first-child { display: none; } /* Hide # col */
+  .admin-table td, .admin-table th { white-space: normal; max-width: 140px; }
+}

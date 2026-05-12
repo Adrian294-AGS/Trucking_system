@@ -5,9 +5,11 @@ import truckingLogo from "@/assets/truck-highway-sunny-sky.jpg";
 import { useNavigate, Link } from "react-router-dom";
 import { useUserAuth } from "../hooks/useUserAuth";
 import WarningPage from "../components/WarningPage";
+import useNotif from "../hooks/useNotif";
 
 export default function Truck() {
   const navigate = useNavigate();
+  const { update } = useNotif();
   const [error, setError] = useState("");
   const { accessToken, user } = useUserAuth();
   const [trucks, setTrucks] = useState([]);
@@ -37,15 +39,16 @@ export default function Truck() {
   }
   if(!accessToken) return (<WarningPage />);
   useEffect(() => {
+    if(!accessToken ) return;
     fetchAvailableTrucks();
-  }, []);
+  }, [update, accessToken]);
 
   return (
      <div>
       <HomeNavbar user={user}/>
       <main className="page">
         <div className="main-content">
-          <h2 className="status sign">Available trucks</h2>
+          <h2 className="status sign" style={{fontSize: "28px"}}>Available trucks</h2>
           
           <div className="truck-grid">
             {trucks.map((truck) => (

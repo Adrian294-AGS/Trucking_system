@@ -2,12 +2,17 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUserAuth } from "../../hooks/useUserAuth";
+import { useToast } from "../../context/ToastContext";
 import WarningPage from "../../components/WarningPage";
+import useNotif from "../../hooks/useNotif";
 
 export default function OrdersPage() {
   const navigate = useNavigate();
+  const { update, sendUpdate } = useNotif();
+  const { showToast } = useToast();
   const { accessToken, authLoading } = useUserAuth();
   const [order, setOrder] = useState([]);
+  const [change, setChange] = useState(false);
 
   const formatCurrency = (amount) => `₱${amount.toLocaleString()}`;
   const formatDate = (dateStr) =>
@@ -16,9 +21,22 @@ export default function OrdersPage() {
       day: "numeric",
     });
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (trip_id, truck_id) => {
     try {
-      console.log("Handle Delete: ", id);
+      const res = await fetch("/api/admin/deleteOrder", {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({trip_id, truck_id})
+      });
+      const result = await res.json();
+      if(!result.success) return showToast("warning", "Admin Orders", result.message);
+      sendUpdate();
+      showToast("info", "Admin Orders", result.message);
+      setChange((prev) => !prev);
     } catch (error) {
       console.log("Hande Delete ERROR: ", error);
     }
@@ -43,7 +61,7 @@ export default function OrdersPage() {
       }
     };
     fetchOrders();
-  }, []);
+  }, [update]);
 
   return (
     <>
@@ -95,6 +113,7 @@ export default function OrdersPage() {
                       onClick={() =>
                         navigate("/admin/editOrder", {
                           state: {
+                            username: t.username,
                             status: t.status,
                             model: t.model,
                             pickup_date: t.pickup_date,
@@ -103,6 +122,7 @@ export default function OrdersPage() {
                             note: t.note,
                             photo: t.photo_url,
                             transac_id: t.transac_id,
+                            amount: t.amount
                           },
                         })
                       }
@@ -110,7 +130,7 @@ export default function OrdersPage() {
                       Edit
                     </button>
                     {t.status === "Complete" && (
-                      <button className="btn-edit" onClick={() => handleDelete(t.trip_id)}>Delete 🗑️</button>
+                      <button className="btn-edit" onClick={() => handleDelete(t.trip_id, t.truck_id)}>Delete 🗑️</button>
                     )}
                   </div>
                 </td>

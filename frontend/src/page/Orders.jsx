@@ -3,13 +3,17 @@ import HomeNavbar from "../components/HomeNavbar";
 import { useUserAuth } from "../hooks/useUserAuth";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "../hooks/useSocket";
+import { useToast } from "../context/ToastContext";
+import useNotif from "../hooks/useNotif";
 
 export default function Orders() {
   const { user, accessToken } = useUserAuth();
+  const { showToast } = useToast();
+  const {update, sendUpdate} = useNotif();
   const [order, setOrder] = useState([]);
-  const { socket } = useSocket();
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [change, setChange] = useState(false);
 
   const fetchOrders = async () => {
     try {
@@ -34,12 +38,33 @@ export default function Orders() {
     }
   };
 
+  const handleCancel = async (trip_id, truck_id) => {
+    try {
+      const res = await fetch(`/api/truck/deleteOrder`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({trip_id, truck_id})
+      });
+      const result = await res.json();
+      if(!result.success) return showToast("warning", "Admin Orders", result.message);
+      sendUpdate();
+      showToast("info", "Admin Orders", result.message);
+      setChange((prev) => !prev);
+    } catch (error) {
+      console.log("Hande Delete ERROR: ", error);
+    }
+  }
+
   useEffect(() => {
     if (!accessToken) {
       return;
     }
     fetchOrders();
-  }, [socket]);
+  }, [update]);
 
   return (
     <div>
@@ -113,9 +138,14 @@ export default function Orders() {
                         {order.status}👌
                       </button>
                     ) : (
-                      <button type="submit" className="btn-rent-submit">
+                      <div>
+                        <button type="submit" className="btn-rent-submit">
                         ...Pending
                       </button>
+                       <button type="submit" className="btn-rent-submit" onClick={() => handleCancel(order.trip_id, order.truck_id)}>
+                        Cancel
+                      </button>
+                      </div>
                     )}
                   </div>
                 </div>

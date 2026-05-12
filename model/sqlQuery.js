@@ -40,7 +40,7 @@ export const fetchSpecificTruck = async (truckId) => {
 
 export const fetchAllRelatedTruckToUser = async (id) => {
   const [result] = await db.query(
-    "SELECT A.UID, A.trip_id, B.pickup_date, B.return_date, B.pickup_location, B.status, B.note, C.photo_url, C.model, C.plate_number FROM tbl_trip AS A JOIN tbl_transaction AS B ON A.trip_id = B.trip_id JOIN tbl_truck AS C ON A.truck_id = C.truck_id WHERE A.UID = ?",
+    "SELECT A.UID, A.trip_id, B.pickup_date, B.return_date, B.pickup_location, B.status, B.note, C.photo_url, C.model, C.plate_number, C.truck_id FROM tbl_trip AS A JOIN tbl_transaction AS B ON A.trip_id = B.trip_id JOIN tbl_truck AS C ON A.truck_id = C.truck_id WHERE A.UID = ?",
     [id],
   );
   return result;
@@ -112,7 +112,7 @@ export const fetchUserLogs = async () => {
 // Admin Actions
 export const fetchOrders = async () => {
   const [result] = await db.query(
-    "SELECT A.username, B.trip_id, C.model, C.photo_url, D.transac_id, D.pickup_date, D.return_date, D.pickup_location, D.note, D.amount, D.status FROM tbl_users AS A JOIN tbl_trip AS B ON A.UID = B.UID JOIN tbl_truck AS C ON B.truck_id = C.truck_id JOIN tbl_transaction AS D ON B.trip_id = D.trip_id",
+    "SELECT A.username, B.trip_id, C.truck_id, C.model, C.photo_url, D.transac_id, D.pickup_date, D.return_date, D.pickup_location, D.note, D.amount, D.status FROM tbl_users AS A JOIN tbl_trip AS B ON A.UID = B.UID JOIN tbl_truck AS C ON B.truck_id = C.truck_id JOIN tbl_transaction AS D ON B.trip_id = D.trip_id",
   );
   return result;
 };
@@ -125,4 +125,9 @@ export const updateTblTransac = async (id, up) => {
 export const deleteOrders = async (id) => {
   const [result] = await db.query("DELETE FROM tbl_trip WHERE trip_id = ?", [id]);
   return result;
-}
+};
+
+export const fetchAllTrucks = async () => {
+  const [result] = await db.query("SELECT * FROM tbl_truck");
+  return result;
+};

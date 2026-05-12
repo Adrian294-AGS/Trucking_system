@@ -5,9 +5,11 @@ import HomeNavbar from "../components/HomeNavbar";
 import { useUserAuth } from "../hooks/useUserAuth";
 import { useNavigate, useLocation, data } from "react-router-dom";
 import LoadingPage from "../components/LoadingPage";
+import useNotif from "../hooks/useNotif";
 
 export default function RentPage() {
   const navigate = useNavigate();
+  const { sendUpdate } = useNotif();
   const location = useLocation();
   const { truck_id, truck_brand, truck_plate, truck_photo } = location.state;
   const { accessToken, user } = useUserAuth();
@@ -93,6 +95,7 @@ export default function RentPage() {
         pickup_location: "",
         notes: "",
       });
+      sendUpdate();
     } catch (err) {
       setError(err.message || "Failed to process rental. Please try again.");
     }
