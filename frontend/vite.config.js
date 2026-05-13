@@ -1,30 +1,35 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 
-export default defineConfig({
-  plugins: [react()],
+export default defineConfig(({ mode }) => {
+  // ✅ Manually load env variables in vite.config.js
+  const env = loadEnv(mode, process.cwd(), "");
 
-  server: {
-    host: true, // allow IP access
-    port: 3000,
+  return {
+    plugins: [react()],
 
-    proxy: {
-      "/api": {
-        target: "http://192.168.100.90:5000", // your backend port
-        changeOrigin: true,
-        secure: false,
-      },
-      "/socket.io": {
-        target: "http://192.168.100.90:5000",
-        changeOrigin: true,
-        ws: true, // important: enables WebSocket proxying
+    server: {
+      host: true,
+      port: 3000,
+
+      proxy: {
+        "/api": {
+          target: env.VITE_API_URL, // ✅ use env from loadEnv
+          changeOrigin: true,
+          secure: false,
+        },
+        "/socket.io": {
+          target: env.VITE_API_URL, // ✅ same here
+          changeOrigin: true,
+          ws: true,
+        },
       },
     },
-  },
 
-  resolve: {
-    alias: {
-      "@": "/src",
+    resolve: {
+      alias: {
+        "@": "/src",
+      },
     },
-  },
+  };
 });

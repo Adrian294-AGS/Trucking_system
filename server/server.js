@@ -15,7 +15,7 @@ const port = process.env.PORT;
 const server = http.createServer(app);
 
 app.use(cors({
-  origin: "http://192.168.100.90:3000",
+  origin: process.env.clientUrl,
   credentials: true
 }));
 
@@ -25,7 +25,7 @@ app.use(cookieParser());
 
 const io = new Server(server, {
   cors: {
-    origin: "http://192.168.100.90:3000",
+    origin: process.env.clientUrl,
     methods: ["GET", "POST"],
     credentials: true
   }

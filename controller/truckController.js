@@ -49,7 +49,7 @@ export const rentTruck = async (req, res) => {
     req.body;
   try {
     const isReserved = await isAlreadyInTransac(truck_id);
-    if (isReserved)
+    if (isReserved.length > 0)
       return res
         .status(202)
         .json({

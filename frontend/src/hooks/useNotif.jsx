@@ -8,6 +8,8 @@ export default function useNotif() {
   const { socket } = useSocket();
   const { showToast } = useToast();
   const [update, setUpdate] = useState(false);
+  const [userLogUpdate, setUserLogUpdate] = useState(false);
+  const [userLogInfo, setUserLogInfo] = useState({});
 
   useEffect(() => {
     if (!socket) return;
@@ -25,9 +27,17 @@ export default function useNotif() {
 
     socket.on("order:update", handleOrderUpdate);
 
+    const userLogHandler = async ({info}) => {
+      setUserLogInfo(info);
+      setUserLogUpdate((prev) => !prev);
+    };
+
+    socket.on("recieve:userLog", userLogHandler);
+
     return () => {
       socket.off("update", handleUpdate);
       socket.off("order:update", handleOrderUpdate);
+      socket.off("recieve:userLog", userLogHandler);
     };
   }, [socket]);
 
@@ -41,5 +51,10 @@ export default function useNotif() {
     socket.emit("order:update", { id, message });
   };
 
-  return { update, sendUpdate, sendOrderUpdate };
+  const sendUserLog = async (info) => {
+    if(!socket) return;
+    socket.emit("send:userLog", {info});
+  };
+
+  return { update, sendUpdate, sendOrderUpdate, sendUserLog, userLogUpdate, userLogInfo };
 }

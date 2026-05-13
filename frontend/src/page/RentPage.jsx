@@ -6,10 +6,12 @@ import { useUserAuth } from "../hooks/useUserAuth";
 import { useNavigate, useLocation, data } from "react-router-dom";
 import LoadingPage from "../components/LoadingPage";
 import useNotif from "../hooks/useNotif";
+import { useToast } from "../context/ToastContext";
 
 export default function RentPage() {
   const navigate = useNavigate();
   const { sendUpdate } = useNotif();
+  const { showToast } = useToast();
   const location = useLocation();
   const { truck_id, truck_brand, truck_plate, truck_photo } = location.state;
   const { accessToken, user } = useUserAuth();
@@ -57,7 +59,7 @@ export default function RentPage() {
       return;
     }
 
-    setIsLoading(true);
+    
 
     formData.truck_id = truck_id;
 
@@ -75,19 +77,16 @@ export default function RentPage() {
       const result = await res.json();
 
       if (!result.success) {
-        setError(result.message);
+        showToast("error", "ssk-trucking", result.message);
         setFormData({
           pickup_date: "",
           return_date: "",
           pickup_location: "",
           notes: "",
         });
+        navigate(-1);
         return;
       }
-
-      setSuccess(
-        "🎉 Truck reserved successfully! Check your email for confirmation.",
-      );
 
       setFormData({
         pickup_date: "",
@@ -95,6 +94,7 @@ export default function RentPage() {
         pickup_location: "",
         notes: "",
       });
+      setIsLoading(true);
       sendUpdate();
     } catch (err) {
       setError(err.message || "Failed to process rental. Please try again.");

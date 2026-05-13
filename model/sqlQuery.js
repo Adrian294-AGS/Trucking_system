@@ -77,7 +77,7 @@ export const isAlreadyInTransac = async (id) => {
     "SELECT trip_id FROM tbl_trip WHERE truck_id = ?",
     [id],
   );
-  return result[0];
+  return result;
 };
 
 // global operations and usage

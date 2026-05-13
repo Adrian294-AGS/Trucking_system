@@ -134,12 +134,12 @@ export default function Orders() {
                     />
 
                     {order.status === "Approved" || order.status === "Complete" ? (
-                      <button type="submit" className="btn-rent-submit" style={{backgroundColor: "red"}}>
+                      <button type="submit" className="btn-rent-submit">
                         {order.status}👌
                       </button>
                     ) : (
                       <div>
-                        <button type="submit" className="btn-rent-submit">
+                        <button type="submit" className="btn-rent-submit" style={{backgroundColor: "red"}}>
                         ...Pending
                       </button>
                        <button type="submit" className="btn-rent-submit" onClick={() => handleCancel(order.trip_id, order.truck_id)}>
@@ -151,7 +151,7 @@ export default function Orders() {
                 </div>
               ))
             ) : (
-              <div>NO CONTENT</div>
+              <div>NO ORDER</div>
             )}
           </div>
         </div>
