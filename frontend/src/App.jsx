@@ -18,6 +18,7 @@ import OrderPage from "./page/Admin/OrderPage";
 import EditOrderPage from "./page/Admin/action/EditOrderPage";
 import VehicleListPage from "./page/Admin/VehicleListPage";
 import DashboardPage from "./page/Admin/DashboardPage";
+import UserLogPage from "./page/Admin/UserLogPage";
 
 const ProtectedRoute = ({ children, allowedRole }) => {
   const { user, authLoading, logout } = useUserAuth(); // ✅ grab authLoading
@@ -100,8 +101,9 @@ function App() {
                 <Route path="dashboard" element={<ProtectedRoute allowedRole={"Admin"}>
                   <DashboardPage />
                 </ProtectedRoute>} />
-                <Route path="userlog" element={<div>User Log Page</div>} />
-                
+                <Route path="userlog" element={<ProtectedRoute allowedRole={"Admin"}>
+                  <UserLogPage />
+                </ProtectedRoute>} />
               </Route>
             </Routes>
           </div>

@@ -9,7 +9,7 @@ export default function useNotif() {
   const { showToast } = useToast();
   const [update, setUpdate] = useState(false);
   const [userLogUpdate, setUserLogUpdate] = useState(false);
-  const [userLogInfo, setUserLogInfo] = useState({});
+  const [userLogInfo, setUserLogInfo] = useState();
 
   useEffect(() => {
     if (!socket) return;
@@ -28,6 +28,7 @@ export default function useNotif() {
     socket.on("order:update", handleOrderUpdate);
 
     const userLogHandler = async ({info}) => {
+      info.Created_at = "Today";
       setUserLogInfo(info);
       setUserLogUpdate((prev) => !prev);
     };

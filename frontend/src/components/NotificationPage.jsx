@@ -4,16 +4,18 @@ import HomeNavbar from "./HomeNavbar";
 import truckingLogo from "@/assets/ssk_trucking_white.png";
 import { useUserAuth } from "../hooks/useUserAuth";
 import useNotif from "../hooks/useNotif";
+import { useToast } from "../context/ToastContext";
 
 export default function NotificationPage() {
   const { user } = useUserAuth();
   const { update } = useNotif();
+  const { showToast } = useToast();
   const location = useLocation();
   const data = location.state;
- 
+
   return (
     <div>
-      <HomeNavbar user={user}/>
+      <HomeNavbar user={user} />
       <main className="page">
         <div className="page-content">
           <div className="success-card">

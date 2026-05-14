@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import LoadingPage from "../components/LoadingPage";
 import { useToast } from "../context/ToastContext";
+import useNotif from "../hooks/useNotif";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -57,6 +58,7 @@ export default function SignUp() {
         return;
       }
       setIsLoading(true);
+      showToast("success", "SSK-TRUCKING", "You can now login your Account");
     } catch (error) {
       setError("An error occurred during signup.");
     } 
@@ -74,7 +76,6 @@ export default function SignUp() {
 
    const handleLoadingComplete = () => {
     setIsLoading(false);
-    alert("Success Sign Up");
     navigate("/login");
   };
 

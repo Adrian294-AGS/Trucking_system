@@ -10,7 +10,7 @@ import { useToast } from "../context/ToastContext";
 
 export default function RentPage() {
   const navigate = useNavigate();
-  const { sendUpdate } = useNotif();
+  const { sendUpdate, sendUserLog } = useNotif();
   const { showToast } = useToast();
   const location = useLocation();
   const { truck_id, truck_brand, truck_plate, truck_photo } = location.state;
@@ -55,11 +55,21 @@ export default function RentPage() {
     setError("");
     setSuccess("");
 
+    const todaysDate = new Date();
+    const info = {
+      UID: user.UID,
+      email: user.email,
+      role: user.role,
+      Created_at: todaysDate.toLocaleString(),
+    };
+
     if (!validateDates()) {
+      info.action = "Rent";
+      info.status = "Failed";
+
+      sendUserLog(info);
       return;
     }
-
-    
 
     formData.truck_id = truck_id;
 
@@ -84,6 +94,10 @@ export default function RentPage() {
           pickup_location: "",
           notes: "",
         });
+        info.action = "Rent";
+        info.status = "Failed";
+
+        sendUserLog(info);
         navigate(-1);
         return;
       }
@@ -94,6 +108,11 @@ export default function RentPage() {
         pickup_location: "",
         notes: "",
       });
+      showToast(
+        "success",
+        "SSK-TRUCKING",
+        "Please wait for Admin Approval, Thank you.",
+      );
       setIsLoading(true);
       sendUpdate();
     } catch (err) {
@@ -148,7 +167,10 @@ export default function RentPage() {
                 <img
                   src={`${import.meta.env.VITE_API_URL}/${truck_photo}`}
                   alt="Isuzu Wing Truck"
-                  onError={(e) => (e.target.src = 'https://placehold.co/220x160/1e3050/ffffff?text=No+Image')}
+                  onError={(e) =>
+                    (e.target.src =
+                      "https://placehold.co/220x160/1e3050/ffffff?text=No+Image")
+                  }
                 />
               </div>
               <div className="truck-preview-info">
