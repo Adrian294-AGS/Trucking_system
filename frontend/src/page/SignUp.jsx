@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import LoadingPage from "../components/LoadingPage";
 import { useToast } from "../context/ToastContext";
-import useNotif from "../hooks/useNotif";
 
 export default function SignUp() {
   const navigate = useNavigate();

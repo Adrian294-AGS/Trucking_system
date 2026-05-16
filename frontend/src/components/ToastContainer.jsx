@@ -7,8 +7,8 @@ const iconMap = {
 export default function ToastContainer({ toasts, onRemove }) {
   return (
     <div className="toast-container">
-      {toasts.map((t) => (
-        <div key={t.id} className={`toast ${t.type}`}>
+      {toasts.map((t, id) => (
+        <div key={id} className={`toast ${t.type}`}>
           <div className="toast-accent" />
           <div className="toast-icon-wrap">{iconMap[t.type]}</div>
           <div className="toast-body">

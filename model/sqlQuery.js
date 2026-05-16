@@ -104,7 +104,7 @@ export const insertToUserLog = async (input) => {
 
 export const fetchUserLogs = async () => {
   const [result] = await db.query(
-    `SELECT UID, email, role, Created_at, action, status FROM tbl_logs ORDER BY Created_at DESC`,
+    `SELECT UID, email, role, Created_at, action, status FROM tbl_logs ORDER BY Created_at DESC Limit 20`,
   );
   return result;
 };

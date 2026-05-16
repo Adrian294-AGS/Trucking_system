@@ -4,12 +4,13 @@ import { useUserAuth } from "../hooks/useUserAuth";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "../hooks/useSocket";
 import { useToast } from "../context/ToastContext";
-import useNotif from "../hooks/useNotif";
+import { useNotif } from "../context/NotificationContext";
+import WarningPage from "../components/WarningPage";
 
 export default function Orders() {
   const { user, accessToken } = useUserAuth();
   const { showToast } = useToast();
-  const {update, sendUpdate} = useNotif();
+  const {update, sendUpdate, sendUserLog} = useNotif();
   const [order, setOrder] = useState([]);
   const navigate = useNavigate();
   const [error, setError] = useState("");
@@ -31,7 +32,6 @@ export default function Orders() {
         setError(result.message);
         return;
       }
-
       setOrder(result.orders);
     } catch (error) {
       console.log("fetchOrders ERROR: ", error);
@@ -52,17 +52,15 @@ export default function Orders() {
       const result = await res.json();
       if(!result.success) return showToast("warning", "Admin Orders", result.message);
       sendUpdate();
+      sendUserLog("Cancel Order", "Success");
       showToast("info", "Admin Orders", result.message);
       setChange((prev) => !prev);
     } catch (error) {
       console.log("Hande Delete ERROR: ", error);
     }
   }
-
+  if(!accessToken) return <WarningPage />
   useEffect(() => {
-    if (!accessToken) {
-      return;
-    }
     fetchOrders();
   }, [update]);
 

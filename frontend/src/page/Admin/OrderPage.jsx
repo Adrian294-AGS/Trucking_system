@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useUserAuth } from "../../hooks/useUserAuth";
 import { useToast } from "../../context/ToastContext";
 import WarningPage from "../../components/WarningPage";
-import useNotif from "../../hooks/useNotif";
+import { useNotif } from "../../context/NotificationContext";
 
 export default function OrdersPage() {
   const navigate = useNavigate();

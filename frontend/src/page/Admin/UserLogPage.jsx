@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import useNotif from "../../hooks/useNotif";
+import { useNotif } from "../../context/NotificationContext";
 import { useUserAuth } from "../../hooks/useUserAuth";
 import { useToast } from "../../context/ToastContext";
 
@@ -91,7 +91,7 @@ export default function UserLogPage() {
                   <td>{log.Created_at == "Today" ? log.Created_at : formatTimestamp(log.Created_at)}</td>
                   <td>{log.action}</td>
                   <td>
-                    <span className={`status ${log.status.toLowerCase()}`}>
+                    <span className={`status ${log.status?.toLowerCase()}`}>
                       {log.status}
                     </span>
                   </td>

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUserAuth } from "../../hooks/useUserAuth";
-import useNotif from "../../hooks/useNotif";
+import { useNotif } from "../../context/NotificationContext";
+import WarningPage from "../../components/WarningPage";
 
 export default function DashboardPage({ user, onLogout }) {
   const navigate = useNavigate();
@@ -41,8 +42,9 @@ export default function DashboardPage({ user, onLogout }) {
     }
   };
 
+  if (!accessToken) return <WarningPage />
+
   useEffect(() => {
-    if (!accessToken) return;
     fetchAllTruck();
   }, [update]);
 

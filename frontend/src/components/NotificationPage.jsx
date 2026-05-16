@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import HomeNavbar from "./HomeNavbar";
 import truckingLogo from "@/assets/ssk_trucking_white.png";
 import { useUserAuth } from "../hooks/useUserAuth";
-import useNotif from "../hooks/useNotif";
+import { useNotif } from "../context/NotificationContext";
 import { useToast } from "../context/ToastContext";
 
 export default function NotificationPage() {

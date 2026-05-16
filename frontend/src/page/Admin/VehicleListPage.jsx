@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useNotif from '../../hooks/useNotif';
+import { useNotif } from '../../context/NotificationContext';
 import { useUserAuth } from '../../hooks/useUserAuth';
 import { useToast } from '../../context/ToastContext';
+import WarningPage from '../../components/WarningPage';
 
 export default function VehicleListPage() {
   const { update } = useNotif();
@@ -11,9 +12,9 @@ export default function VehicleListPage() {
   const [vehicles, setVehicles] = useState([]);
   const { showToast } = useToast();
 
+  if(!accessToken) return <WarningPage />;
 
   useEffect(() => {
-    if(!accessToken) return;
     const fetchAllTruck = async () => {
         try {
             const res = await fetch("/api/admin/fetchAllTruck", {

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useUserAuth } from "../../../hooks/useUserAuth";
 import { useToast } from "../../../context/ToastContext";
-import useNotif from "../../../hooks/useNotif";
+import { useNotif } from "../../../context/NotificationContext";
+import WarningPage from "../../../components/WarningPage";
 
 export default function EditOrderPage() {
   const navigate = useNavigate();
@@ -60,6 +61,8 @@ export default function EditOrderPage() {
       console.log("EditOrderPage ERROR: ", error);
     }
   };
+
+  if(!accessToken) return <WarningPage />
 
   return (
     <div className="admin-main">

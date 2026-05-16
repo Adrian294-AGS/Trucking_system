@@ -6,7 +6,8 @@ import { useEffect, useState } from "react";
 import { useSocket } from "../hooks/useSocket";
 import { useNavigate } from "react-router-dom";
 import LoadingPage from "../components/LoadingPage";
-import useNotif from "../hooks/useNotif";
+import { useNotif } from "../context/NotificationContext";
+import WarningPage from "../components/WarningPage";
 
 export default function Home() {
   const { accessToken, authLoading, user } = useUserAuth();
@@ -54,6 +55,7 @@ export default function Home() {
       console.log("FetchAllTruck ERROR: ", error);
     }
   };
+  if(!accessToken) return <WarningPage />;
   useEffect(() => {
     if (authLoading || !accessToken) return;
     fetchAllTruck();

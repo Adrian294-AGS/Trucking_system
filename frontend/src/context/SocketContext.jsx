@@ -1,31 +1,32 @@
 import { createContext, useEffect, useState } from "react";
 import { useUserAuth } from "../hooks/useUserAuth";
-import { io } from "socket.io-client";
+import socket from "../lib/socket";
 
 export const SocketCreateContext = createContext();
 
 export default function SocketContext({ children }) {
   const { accessToken, user } = useUserAuth();
-  const [socket, setSocket] = useState(null);
-  const userId = user?.fullName;
 
   useEffect(() => {
-    if (!accessToken || !userId) return;
+    if (!accessToken || !user){
+      socket.disconnect();
+      return;
+    };
 
-    const tempSocket = io({
-      autoConnect: false,
-      withCredentials: true,
+    socket.connect();
+
+    socket.on("connect", () => {
+      socket.emit("user:connect", { userId: user.fullName });
     });
 
-    tempSocket.connect();
+    return () => {
+      socket.off("connect");
+    }
 
-    tempSocket.emit("user:connect", { userId });
-
-    setSocket(tempSocket);
   }, [accessToken, user]);
 
   return (
-    <SocketCreateContext.Provider value={{ socket }}>
+    <SocketCreateContext.Provider value={ socket }>
       {children}
     </SocketCreateContext.Provider>
   );

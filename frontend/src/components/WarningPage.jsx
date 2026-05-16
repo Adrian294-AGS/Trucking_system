@@ -1,15 +1,10 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export default function WarningPage({ 
   onSignIn, 
   message = "You need to sign in to access this page.",
   subMessage = "Please log in to your SSK Trucking account to continue."
 }) {
-  const navigate = useNavigate();
-  const handleGoBack = () => {
-    navigate("/login");
-  };
 
   return (
     <div className="warning-overlay">
@@ -59,8 +54,12 @@ export default function WarningPage({
 
         {/* Action Buttons */}
         <div className="warn-actions">
-          <button className="btn-warn-secondary" onClick={handleGoBack}>
-            ← Log-In
+          <button className="btn-warn-secondary">
+          
+             <a href='http://192.168.100.90:3000/login' style={{textDecoration: "none"}}>
+              ← Log-In
+             </a>
+           
           </button>
         </div>
 

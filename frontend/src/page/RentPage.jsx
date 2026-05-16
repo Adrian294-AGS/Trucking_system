@@ -5,8 +5,9 @@ import HomeNavbar from "../components/HomeNavbar";
 import { useUserAuth } from "../hooks/useUserAuth";
 import { useNavigate, useLocation, data } from "react-router-dom";
 import LoadingPage from "../components/LoadingPage";
-import useNotif from "../hooks/useNotif";
+import { useNotif } from "../context/NotificationContext";
 import { useToast } from "../context/ToastContext";
+import WarningPage from "../components/WarningPage";
 
 export default function RentPage() {
   const navigate = useNavigate();
@@ -55,19 +56,9 @@ export default function RentPage() {
     setError("");
     setSuccess("");
 
-    const todaysDate = new Date();
-    const info = {
-      UID: user.UID,
-      email: user.email,
-      role: user.role,
-      Created_at: todaysDate.toLocaleString(),
-    };
 
     if (!validateDates()) {
-      info.action = "Rent";
-      info.status = "Failed";
-
-      sendUserLog(info);
+      sendUserLog("Rent", "Failed");
       return;
     }
 
@@ -94,10 +85,8 @@ export default function RentPage() {
           pickup_location: "",
           notes: "",
         });
-        info.action = "Rent";
-        info.status = "Failed";
 
-        sendUserLog(info);
+        await sendUserLog("Rent", "Failed");
         navigate(-1);
         return;
       }
@@ -113,6 +102,7 @@ export default function RentPage() {
         "SSK-TRUCKING",
         "Please wait for Admin Approval, Thank you.",
       );
+      await sendUserLog("Rent", "Success");
       setIsLoading(true);
       sendUpdate();
     } catch (err) {
@@ -152,6 +142,8 @@ export default function RentPage() {
       />
     );
   }
+  
+  if(!accessToken) return <WarningPage />;
 
   return (
     <div>
