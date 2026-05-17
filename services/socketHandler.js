@@ -1,4 +1,4 @@
-import { insertToUserLog } from "../model/sqlQuery.js";
+import { insertToUserLog, insertToDatabase, fetchNotif } from "../model/sqlQuery.js";
 
 export const socketHandler = (io, socket) => {
   socket.on("user:connect", ({ userId }) => {
@@ -13,14 +13,20 @@ export const socketHandler = (io, socket) => {
 
   socket.on("send:userLog", async ({ userLogInfo }) => {
     delete userLogInfo.Created_at;
-    console.log("Received userLogInfo:", userLogInfo); 
     await insertToUserLog(userLogInfo);
     io.emit("recieve:userLog", { userLogInfo });
   });
 
-  socket.on("order:update", ({ id, message }) => {
-    io.to(`user:${id}`).emit("order:update", {
-      message: message,
-    });
+  socket.on("order:update", async ({ id, message, notifInfo }) => {
+    try {
+      const result = await insertToDatabase("tbl_notif", notifInfo);
+      const info = await fetchNotif(result.insertId);
+      io.to(`user:${id}`).emit("order:update", {
+        message: message,
+        notifInfo: info
+      });
+    } catch (error) {
+      console.log("order:update Socket ERROR: ", error);
+    }
   });
 };

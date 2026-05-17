@@ -51,6 +51,8 @@ export default function EditOrderPage() {
       sendOrderUpdate(
         state.username,
         `${state.username} ${formData.status} Order`,
+        state.UID,
+        formData.status
       );
 
       setFormData((prev) => ({ ...prev }));

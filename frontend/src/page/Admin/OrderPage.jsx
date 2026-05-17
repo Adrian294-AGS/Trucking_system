@@ -113,6 +113,7 @@ export default function OrdersPage() {
                       onClick={() =>
                         navigate("/admin/editOrder", {
                           state: {
+                            UID: t.UID,
                             username: t.username,
                             status: t.status,
                             model: t.model,

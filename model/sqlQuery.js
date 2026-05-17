@@ -80,6 +80,11 @@ export const isAlreadyInTransac = async (id) => {
   return result;
 };
 
+export const fetchNotif = async (id) => {
+  const [result] = await db.query("SELECT * FROM tbl_notif WHERE notif_id = ?", [id]);
+  return result[0];
+};
+
 // global operations and usage
 
 export const insertToDatabase = async (table, input) => {
@@ -112,7 +117,7 @@ export const fetchUserLogs = async () => {
 // Admin Actions
 export const fetchOrders = async () => {
   const [result] = await db.query(
-    "SELECT A.username, B.trip_id, C.truck_id, C.model, C.photo_url, D.transac_id, D.pickup_date, D.return_date, D.pickup_location, D.note, D.amount, D.status FROM tbl_users AS A JOIN tbl_trip AS B ON A.UID = B.UID JOIN tbl_truck AS C ON B.truck_id = C.truck_id JOIN tbl_transaction AS D ON B.trip_id = D.trip_id",
+    "SELECT A.username, A.UID, B.trip_id, C.truck_id, C.model, C.photo_url, D.transac_id, D.pickup_date, D.return_date, D.pickup_location, D.note, D.amount, D.status FROM tbl_users AS A JOIN tbl_trip AS B ON A.UID = B.UID JOIN tbl_truck AS C ON B.truck_id = C.truck_id JOIN tbl_transaction AS D ON B.trip_id = D.trip_id",
   );
   return result;
 };
