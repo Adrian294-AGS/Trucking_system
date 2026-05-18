@@ -85,6 +85,11 @@ export const fetchNotif = async (id) => {
   return result[0];
 };
 
+export const retrieveNotif = async (params) => {
+  const [result] = await db.query("SELECT * FROM tbl_notif WHERE UID = ? ORDER BY timeStamp DESC LIMIT 10", [params]);
+  return result;
+};
+
 // global operations and usage
 
 export const insertToDatabase = async (table, input) => {

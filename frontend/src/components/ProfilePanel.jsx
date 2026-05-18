@@ -2,9 +2,11 @@ import React, { useEffect } from "react";
 import { useUserAuth } from "../hooks/useUserAuth";
 import { useNavigate } from "react-router-dom";
 import { useNotif } from "../context/NotificationContext";
+import { useNotifBell } from "../context/NotificationInfoContext";
 
 export default function ProfilePanel({ isOpen, onClose, user }) {
   const navigate = useNavigate();
+  const { setNotifications } = useNotifBell();
   const { sendUserLog } = useNotif();
   const { logout, setAccessToken } = useUserAuth();
   // Close panel on Escape key
@@ -42,6 +44,7 @@ export default function ProfilePanel({ isOpen, onClose, user }) {
   const handleLogout = () => {
     logout();
     sendUserLog("Log out", "Success");
+    setNotifications(null);
     navigate("/login");
     // Clear auth tokens, redirect to login, etc.
   };

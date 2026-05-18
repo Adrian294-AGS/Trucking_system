@@ -13,7 +13,7 @@ export default function NotificationContext({ children }) {
   const [update, setUpdate] = useState(false);
   const [userLogUpdate, setUserLogUpdate] = useState(false);
   const [userLogInfo, setUserLogInfo] = useState(null);
-  const [notifInfo, setNotifInfo] = useState(null);
+ 
 
   useEffect(() => {
     if (!user) return;
@@ -35,8 +35,6 @@ export default function NotificationContext({ children }) {
 
     const handleOrderUpdate = ({ message, notifInfo }) => {
       showToast("success", "Order 🧺", message);
-      notifInfo.isRead = false;
-      setNotifInfo(notifInfo);
       setUpdate((prev) => !prev);
     };
 
@@ -66,6 +64,7 @@ export default function NotificationContext({ children }) {
     if (!socket) return;
     const notifInfo = {
       UID: UID,
+      text: message,
       type: "request",
       tag: status.toUpperCase(),
       tagType: status.toLowerCase()

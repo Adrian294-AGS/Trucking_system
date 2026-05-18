@@ -5,6 +5,7 @@ import { UserAuthProvider } from "./context/UserAuthProvider.jsx";
 import SocketContext from "./context/SocketContext.jsx";
 import { ToastProvider } from "./context/ToastContext.jsx";
 import NotificationContext from "./context/NotificationContext.jsx";
+import NotificationInfoProvider from "./context/NotificationInfoContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -12,7 +13,9 @@ createRoot(document.getElementById("root")).render(
       <UserAuthProvider>
         <SocketContext>
           <NotificationContext>
-            <App />
+            <NotificationInfoProvider>
+              <App />
+            </NotificationInfoProvider>
           </NotificationContext>
         </SocketContext>
       </UserAuthProvider>

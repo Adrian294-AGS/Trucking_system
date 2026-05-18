@@ -1,183 +1,234 @@
 import React, { useState, useEffect } from 'react';
+import { useNotifBell } from '../context/NotificationInfoContext';
 
-export default function NotificationPanel({ 
-  isOpen, 
-  onClose, 
-  notifications = [], 
-  onMarkAllRead, 
-  onNotificationClick 
+// ─── Tag color map: tagType → colors ─────────────────────────────────────────
+const TAG_COLORS = {
+  complete: { bg: '#dcfce7', color: '#166534' },
+  approved: { bg: '#dbeafe', color: '#1e40af' },
+  pending:  { bg: '#fef9c3', color: '#854d0e' },
+  system:   { bg: '#f1f5f9', color: '#475569' },
+};
+
+// ─── Format timestamp → "May 18, 2026" ───────────────────────────────────────
+function formatDate(ts) {
+  return new Date(ts).toLocaleDateString('en-US', {
+    month: 'short', day: 'numeric', year: 'numeric',
+  });
+}
+
+// ─── Format timestamp → "11:42 AM" ───────────────────────────────────────────
+function formatTime(ts) {
+  return new Date(ts).toLocaleTimeString('en-US', {
+    hour: 'numeric', minute: '2-digit',
+  });
+}
+
+// ─── Group a list of notifications by date string ────────────────────────────
+function groupByDate(list) {
+  if(!list) return;
+  const groups = {};
+  for (const notif of list) {
+    const label = formatDate(notif.timeStamp);
+    if (!groups[label]) groups[label] = [];
+    groups[label].push(notif);
+  }
+  return groups;
+}
+
+// ─── Single notification row ──────────────────────────────────────────────────
+function NotifItem({ notif, onMarkRead }) {
+  const tagStyle  = TAG_COLORS[notif.tagType] || TAG_COLORS.system;
+  const isUnread  = notif.isRead === 0;
+  const displayText = notif.text || `New ${notif.tag} notification`;
+
+  return (
+    <div
+      onClick={() => isUnread && onMarkRead(notif.notif_id)}
+      style={{
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: 12,
+        padding: '12px 16px',
+        cursor: isUnread ? 'pointer' : 'default',
+        background: isUnread ? '#f0fdf4' : 'transparent',
+        borderBottom: '1px solid #f1f5f9',
+        transition: 'background 0.2s',
+      }}
+    >
+      {/* Avatar */}
+      <div style={{
+        width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
+        background: '#bbf7d0', color: '#166534',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontWeight: 600, fontSize: 12,
+      }}>
+        🔔
+      </div>
+
+      {/* Message + time + tag */}
+      <div style={{ flex: 1 }}>
+        <p style={{ margin: '0 0 4px', fontSize: 14, color: '#1e293b', lineHeight: 1.4 }}>
+          {displayText}
+        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 11, color: '#94a3b8' }}>{formatTime(notif.timeStamp)}</span>
+          <span style={{
+            fontSize: 10, fontWeight: 700, padding: '2px 7px',
+            borderRadius: 999, background: tagStyle.bg, color: tagStyle.color,
+          }}>
+            {notif.tag}
+          </span>
+        </div>
+      </div>
+
+      {/* Green dot — shown when isRead = 0 */}
+      {isUnread && (
+        <div style={{
+          width: 7, height: 7, borderRadius: '50%',
+          background: '#22c55e', flexShrink: 0, marginTop: 6,
+        }} />
+      )}
+    </div>
+  );
+}
+
+// ─── Main panel ───────────────────────────────────────────────────────────────
+// Props from NotificationBell:
+//   isOpen        — whether the panel is visible
+//   onClose       — called when user closes the panel
+//   notifications — the full notifications array (state lives in NotificationBell)
+//   onMarkRead    — call with a notif_id to mark one as read
+//   onMarkAllRead — call to mark all as read
+export default function NotificationPanel({
+  isOpen,
+  onClose,
+  onMarkRead,
+  onMarkAllRead,
 }) {
-  // State for which tab is active: 'requests' or 'system'
   const [activeTab, setActiveTab] = useState('requests');
+  const { notifications } = useNotifBell();
 
-  // Close panel when user presses Escape key
+  // Close panel on Escape key
   useEffect(() => {
-    function handleEscape(e) {
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    }
-    document.addEventListener('keydown', handleEscape);
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-    };
+    function handleKey(e) { if (e.key === 'Escape' && isOpen) onClose(); }
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
   }, [isOpen, onClose]);
 
-  // Stop body from scrolling when panel is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
+  // Filter by tab: Requests tab = type 'request', System tab = type 'system'
+  const filtered = notifications?.filter(n =>
+    activeTab === 'requests' ? n.type === 'request' : n.type === 'system'
+  );
 
-  // Filter notifications based on active tab
-  let filteredNotifs = [];
-  if (activeTab === 'requests') {
-    // Show only request-type notifications
-    filteredNotifs = notifications.filter(n => n.type === 'request');
-  } else if (activeTab === 'system') {
-    // Show only system-type notifications
-    filteredNotifs = notifications.filter(n => n.type === 'system');
-  }
+  // Count unread in the current tab
+  const unreadCount = filtered?.filter(n => n.isRead === 0).length;
 
-  // Group notifications by date (Today, Yesterday, etc.)
-  const groupedNotifs = {};
-  for (let i = 0; i < filteredNotifs.length; i++) {
-    const notif = filteredNotifs[i];
-    // Convert timestamp to readable date like "Monday, May 12"
-    const date = new Date(notif.timestamp).toLocaleDateString('en-US', { 
-      weekday: 'long', 
-      month: 'short', 
-      day: 'numeric' 
-    });
-    
-    // Create array for this date if it doesn't exist
-    if (!groupedNotifs[date]) {
-      groupedNotifs[date] = [];
-    }
-    // Add notification to this date's array
-    groupedNotifs[date].push(notif);
-  }
+  // Group filtered notifications by date
+  const grouped = groupByDate(filtered);
 
-  // If panel is closed, don't render anything
-  if (!isOpen) {
-    return null;
-  }
+  if (!isOpen) return null;
 
   return (
     <>
-      {/* Dark overlay behind the panel */}
-      <div 
-        className={`notif-overlay ${isOpen ? 'show' : ''}`} 
+      {/* Overlay — clicking it closes the panel */}
+      <div
         onClick={onClose}
+        style={{
+          position: 'fixed', inset: 0,
+          background: 'rgba(0,0,0,0.25)', zIndex: 100,
+        }}
       />
 
-      {/* Slide-out panel */}
-      <aside 
-        className={`notif-panel ${isOpen ? 'open' : ''}`} 
-        role="dialog" 
-        aria-label="Notifications"
-      >
-        {/* Panel Header */}
-        <div className="notif-panel-header">
-          <h2 className="notif-panel-title">Notifications</h2>
-          <div className="notif-header-actions">
-            <button className="mark-all-btn" onClick={onMarkAllRead}>
+      {/* Slide-in panel */}
+      <aside style={{
+        position: 'fixed', top: 0, right: 0, bottom: 0,
+        width: 380, background: '#fff', zIndex: 101,
+        display: 'flex', flexDirection: 'column',
+        boxShadow: '-4px 0 24px rgba(0,0,0,0.1)',
+        fontFamily: 'system-ui, sans-serif',
+      }}>
+
+        {/* Header */}
+        <div style={{
+          padding: '16px 20px',
+          borderBottom: '1px solid #e2e8f0',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: '#0f172a' }}>
+              Notifications
+            </h2>
+            {unreadCount > 0 && (
+              <span style={{
+                background: '#22c55e', color: '#fff',
+                fontSize: 11, fontWeight: 700,
+                borderRadius: 999, padding: '2px 7px',
+              }}>
+                {unreadCount}
+              </span>
+            )}
+          </div>
+          <div style={{ display: 'flex', gap: 6 }}>
+            <button
+              onClick={onMarkAllRead}
+              style={{
+                fontSize: 12, color: '#3b82f6',
+                background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px',
+              }}
+            >
               Mark all read
             </button>
-            <button className="notif-close-btn" onClick={onClose} aria-label="Close">
+            <button
+              onClick={onClose}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontSize: 20, color: '#94a3b8', lineHeight: 1,
+              }}
+            >
               ✕
             </button>
           </div>
         </div>
 
-        {/* Tab Buttons - Only Requests and System */}
-        <div className="notif-filter-tabs">
-          <button
-            className={`notif-tab ${activeTab === 'requests' ? 'active' : ''}`}
-            onClick={() => setActiveTab('requests')}
-          >
-            Requests
-          </button>
-          <button
-            className={`notif-tab ${activeTab === 'system' ? 'active' : ''}`}
-            onClick={() => setActiveTab('system')}
-          >
-            System
-          </button>
+        {/* Tabs */}
+        <div style={{ display: 'flex', borderBottom: '1px solid #e2e8f0', padding: '0 20px' }}>
+          {['requests', 'system'].map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              style={{
+                padding: '10px 16px', fontSize: 14, fontWeight: 500,
+                background: 'none', border: 'none', cursor: 'pointer',
+                color: activeTab === tab ? '#22c55e' : '#94a3b8',
+                borderBottom: activeTab === tab ? '2px solid #22c55e' : '2px solid transparent',
+                textTransform: 'capitalize',
+              }}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
 
-        {/* Notification List */}
-        <div className="notif-list">
-          {/* Show message if no notifications */}
-          {filteredNotifs.length === 0 ? (
-            <div className="notif-empty">
-              <div className="notif-empty-icon">🔔</div>
-              <p>No notifications yet</p>
+        {/* List */}
+        <div style={{ flex: 1, overflowY: 'auto' }}>
+          {filtered.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '48px 24px', color: '#94a3b8' }}>
+              <div style={{ fontSize: 28, marginBottom: 8 }}>🔔</div>
+              <p style={{ margin: 0, fontSize: 13 }}>No notifications</p>
             </div>
           ) : (
-            // Loop through each date group
-            Object.keys(groupedNotifs).map((day) => (
-              <div key={day}>
-                {/* Date label like "Monday, May 12" */}
-                <div className="notif-day-label">{day}</div>
-                
-                {/* Loop through notifications for this date */}
-                {groupedNotifs[day].map((notif) => (
-                  <div
-                    key={notif.id}
-                    className={`notif-item ${!notif.read ? 'unread' : ''}`}
-                    onClick={() => onNotificationClick?.(notif)}
-                  >
-                    {/* Avatar circle */}
-                    <div className={`notif-avatar av-${notif.avatarColor || 'gray'}`}>
-                      {notif.avatarInitials || '🔔'}
-                      {notif.badgeIcon && (
-                        <span className={`notif-badge-icon badge-${notif.badgeColor || 'gray'}`}>
-                          {notif.badgeIcon}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Notification text and details */}
-                    <div className="notif-body">
-                      <div className="notif-text" dangerouslySetInnerHTML={{ __html: notif.text }} />
-                      <div className="notif-meta">
-                        <span className="notif-time">{notif.time}</span>
-                        {notif.tag && (
-                          <span className={`notif-tag tag-${notif.tagType || 'system'}`}>
-                            {notif.tag}
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Action buttons like Approve/Decline */}
-                      {notif.actions && (
-                        <div className="notif-actions">
-                          {notif.actions.map((action, idx) => (
-                            <button
-                              key={idx}
-                              className={`notif-action-btn ${action.className || ''}`}
-                              onClick={(e) => {
-                                e.stopPropagation(); // Don't trigger the item click
-                                action.onClick?.(notif);
-                              }}
-                            >
-                              {action.label}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Red dot for unread notifications */}
-                    {!notif.read && <div className="unread-dot" />}
-                  </div>
+            Object.entries(grouped).map(([dateLabel, items]) => (
+              <div key={dateLabel}>
+                <div style={{
+                  padding: '7px 16px', fontSize: 11, fontWeight: 600,
+                  color: '#94a3b8', background: '#f8fafc',
+                  borderBottom: '1px solid #f1f5f9',
+                  textTransform: 'uppercase', letterSpacing: '0.05em',
+                }}>
+                  {dateLabel}
+                </div>
+                {items.map(notif => (
+                  <NotifItem key={notif.notif_id} notif={notif} onMarkRead={onMarkRead} />
                 ))}
               </div>
             ))
