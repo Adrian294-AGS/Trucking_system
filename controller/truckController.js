@@ -4,7 +4,8 @@ import {
   insertToDatabase,
   updateTruck,
   isAlreadyInTransac,
-  fetchAllRelatedTruckToUser
+  fetchAllRelatedTruckToUser,
+  deleteVehicle
 } from "../model/sqlQuery.js";
 
 // fetching all trucks for the preview page
@@ -50,12 +51,10 @@ export const rentTruck = async (req, res) => {
   try {
     const isReserved = await isAlreadyInTransac(truck_id);
     if (isReserved.length > 0)
-      return res
-        .status(202)
-        .json({
-          success: false,
-          message: "Were Sorry this Truck is Already Reserved",
-        });
+      return res.status(202).json({
+        success: false,
+        message: "Were Sorry this Truck is Already Reserved",
+      });
 
     const trip = {
       UID: UID,
@@ -74,7 +73,7 @@ export const rentTruck = async (req, res) => {
       note: notes,
     };
 
-    await updateTruck("tbl_truck", {on_trip: 1}, truck_id);
+    await updateTruck("tbl_truck", { on_trip: 1 }, truck_id);
     await insertToDatabase("tbl_transaction", transac);
 
     return res
@@ -86,7 +85,6 @@ export const rentTruck = async (req, res) => {
   }
 };
 
-
 // Geting user orders
 
 export const getOrders = async (req, res) => {
@@ -94,13 +92,78 @@ export const getOrders = async (req, res) => {
 
   try {
     const orders = await fetchAllRelatedTruckToUser(UID);
-    if(!orders){
-      return res.status(404).json({success: false, message: "Trucks do not Found"})
+    if (!orders) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Trucks do not Found" });
     }
-    return res.status(200).json({success: true, message: "Fetched Successfull", orders});
+    return res
+      .status(200)
+      .json({ success: true, message: "Fetched Successfull", orders });
   } catch (error) {
     console.log("RentTruck ERROR: ", error);
     return res.status(500).json({ success: false, message: "SERVER ERROR" });
   }
-}
+};
 
+export const editTruck = async (req, res) => {
+  const { truck_id, model, brand, plateNumber, year, type, fuelType, status } =
+    req.body;
+  try {
+    const input = {
+      model,
+      year,
+      plate_number: plateNumber,
+      brand,
+      truck_type: type,
+      status,
+    };
+    const update = await updateTruck("tbl_truck", input, truck_id);
+    if (!update)
+      return res.status(202).json({ success: false, message: "Update Failed" });
+    return res
+      .status(201)
+      .json({ success: true, message: "Successfully Updated" });
+  } catch (error) {
+    console.log("edit Truck ERROR: ", error);
+    return res.status(500).json({ success: false, message: "SERVER ERROR" });
+  }
+};
+
+export const deleteTruck = async (req, res) => {
+  const { truck_id } = req.params;
+
+  try {
+    const isDelete = await deleteVehicle(truck_id);
+    if(!isDelete) return res.status(202).json({ success: false, message: "DELETE Failed" });
+    return res.status(200).json({success: false, message: "Successfully Deleted"});
+  } catch (error) {
+    console.log("Delete Truck ERROR: ", error);
+    return res.status(500).json({ success: false, message: "SERVER ERROR" });
+  }
+};
+
+export const addTruck = async (req, res) => {
+  const truckPhoto = req.file.filename;
+  const { brand, plateNumber, truckType, status, year, fuelType } = req.body;
+
+  try {
+    const input = {
+      model: brand,
+      year,
+      plate_number: plateNumber,
+      brand,
+      truck_type: truckType,
+      fuel_type: fuelType,
+      is_active: 1,
+      on_trip: 0,
+      photo_url: truckPhoto,
+      status
+    };
+    const result = await insertToDatabase("tbl_truck", input);
+    if(!result) return res.status()
+  } catch (error) {
+    console.log("addTruck ERROR: ", error);
+    return res.status(500).json({ success: false, message: "SERVER ERROR" });
+  }
+}

@@ -67,6 +67,9 @@ export default function Truck() {
                   <div className="info-row">
                     <strong>Type:</strong> {truck.truck_type}
                   </div>
+                   <div className="info-row">
+                    <strong>PLate Number:</strong> {truck.plate_number}
+                  </div>
 
                   {truck.on_trip == 1 ? (
                        <button

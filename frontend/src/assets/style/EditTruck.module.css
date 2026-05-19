@@ -1,0 +1,184 @@
+/* EditTruckPage.module.css - SCOPED STYLES ONLY */
+
+.editPanel {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.truckPreview {
+  flex-shrink: 0;
+  width: 200px;
+}
+
+.truckPreview .statusBar {
+  background: var(--orange);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 4px 4px 0 0;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.truckPreview img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+  border-radius: 0 0 4px 4px;
+  border: 1px solid var(--border);
+  background: #1a3a5c;
+}
+
+.truckForm {
+  flex: 1;
+}
+
+.truckForm h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 24px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.formGroup.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.formGroup label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--gray);
+  text-transform: uppercase;
+}
+
+.formGroup input[type="text"],
+.formGroup select {
+  background: var(--navy);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--white);
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  padding: 9px 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.formGroup input[type="text"]:focus,
+.formGroup select:focus {
+  border-color: var(--accent);
+}
+
+.formGroup select option {
+  background: var(--navy2);
+  color: var(--white);
+}
+
+.statusOptions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.statusOption {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray);
+}
+
+.statusOption input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.statusOption:hover {
+  color: var(--white);
+}
+
+.btnRow {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.btnSave {
+  padding: 11px;
+  background: #c0392b;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btnSave:hover {
+  background: #a93226;
+}
+
+.btnDelete {
+  padding: 11px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--gray);
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  text-align: center;
+}
+
+.btnDelete:hover {
+  background: #c0392b;
+  border-color: #c0392b;
+  color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .editPanel {
+    flex-direction: column;
+  }
+  .truckPreview {
+    width: 100%;
+  }
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+  .btnRow {
+    grid-template-columns: 1fr;
+  }
+}

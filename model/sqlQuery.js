@@ -46,6 +46,7 @@ export const fetchAllRelatedTruckToUser = async (id) => {
   return result;
 };
 
+
 // Users and Admin Operations
 
 export const fetchUserForSignup = async (username, email) => {
@@ -87,6 +88,11 @@ export const fetchNotif = async (id) => {
 
 export const retrieveNotif = async (params) => {
   const [result] = await db.query("SELECT * FROM tbl_notif WHERE UID = ? ORDER BY timeStamp DESC LIMIT 10", [params]);
+  return result;
+};
+
+export const deleteVehicle = async (params) => {
+  const [result] = await db.query("DELETE FROM tbl_truck WHERE truck_id = ?", [params]);
   return result;
 };
 
