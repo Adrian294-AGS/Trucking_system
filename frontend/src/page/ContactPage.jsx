@@ -47,91 +47,6 @@ export default function ContactPage() {
     <div>
       <HomeNavbar user={user} />
       <main className="page">
-        <div className="page-content">
-          <h1 className="page-title">Contact us</h1>
-          <p className="page-sub">
-            We are here to help you, send a message below.
-          </p>
-
-          <div className="contact-layout">
-            {/* Contact Form */}
-            <form className="contact-form" onSubmit={handleSubmit}>
-              <div className="field">
-                <label htmlFor="fullName">Full Name</label>
-                <input
-                  type="text"
-                  id="fullName"
-                  name="fullName"
-                  className="form-input dark-input"
-                  placeholder="e.g Alexandrie Abon"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="field">
-                <label htmlFor="email">Email Address</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  className="form-input dark-input"
-                  placeholder="e.g Alexandrie.abon@gmail.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="field">
-                <label htmlFor="subject">Subject</label>
-                <input
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  className="form-input dark-input"
-                  placeholder="e.g Inquiry about rental"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="field">
-                <label htmlFor="message">Message</label>
-                <textarea
-                  id="message"
-                  name="message"
-                  className="form-textarea"
-                  rows="5"
-                  placeholder="Tell us how we can help..."
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              {submitStatus === "success" && (
-                <div className="form-success">
-                  ✅ Message sent successfully! We'll reply soon.
-                </div>
-              )}
-              {submitStatus === "error" && (
-                <div className="form-error">
-                  ❌ Failed to send. Please try again.
-                </div>
-              )}
-
-              <button
-                type="submit"
-                className="btn-send"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Sending..." : "Send Message"}
-              </button>
-            </form>
-
             {/* Contact Info Box */}
             <div className="contact-info-box">
               <div className="info-title">Our Contact Information</div>
@@ -160,8 +75,6 @@ export default function ContactPage() {
                 <div className="info-value">Mon–Sat: 7:00 AM – 9:00 PM</div>
               </div>
             </div>
-          </div>
-        </div>
       </main>
     </div>
   );

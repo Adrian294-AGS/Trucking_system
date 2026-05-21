@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import LoadingPage from "../components/LoadingPage";
@@ -28,15 +27,50 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.password !== formData.confirm_password) {
-      showToast("warning", "signUp", "Passwords do not match.");
-      setFormData({
-        ...formData,
-        password: "",
-        confirm_password: "",
-      });
+    const phoneRegex = /^[0-9]+$/;
+    if (!formData.phone || !phoneRegex.test(formData.phone)) {
+      showToast(
+        "warning",
+        "signUp",
+        "Phone Number must contain only numbers or it is to short to be a phone number.",
+      );
+      setFormData({ ...formData, phone: "" });
       return;
     }
+
+    if (formData.phone.length < 11) {
+      showToast(
+        "warning",
+        "signUp",
+        "Phone Number must contain only numbers or it is to short to be a phone number.",
+      );
+      setFormData({ ...formData, phone: "" });
+      return;
+    } else if (formData.phone.length > 11) {
+      showToast(
+        "warning",
+        "signUp",
+        "Phone Number must contain only numbers or it is to long to be a phone number.",
+      );
+      setFormData({ ...formData, phone: "" });
+      return;
+    }
+
+    if (formData.password.length <= 3) {
+      showToast("warning", "signUp", "Passwords is too short.");
+      setFormData({ ...formData, password: "", confirm_password: "" });
+      return;
+    }
+    // 1. Password match check
+    if (formData.password !== formData.confirm_password) {
+      showToast("warning", "signUp", "Passwords do not match.");
+      setFormData({ ...formData, password: "", confirm_password: "" });
+      return;
+    }
+
+    // ✅ 2. Fixed Phone Number Validation
+    // HTML inputs always return strings. We use regex to allow ONLY digits.
+
     try {
       const res = await fetch("/api/user/signUp", {
         method: "POST",
@@ -60,7 +94,7 @@ export default function SignUp() {
       showToast("success", "SSK-TRUCKING", "You can now login your Account");
     } catch (error) {
       setError("An error occurred during signup.");
-    } 
+    }
   };
 
   const handleReset = () => {
@@ -73,27 +107,27 @@ export default function SignUp() {
     });
   };
 
-   const handleLoadingComplete = () => {
+  const handleLoadingComplete = () => {
     setIsLoading(false);
     navigate("/login");
   };
 
   if (isLoading) {
-      return (
-        <LoadingPage
-          onComplete={handleLoadingComplete}
-          brand="SSK TRUCKING"
-          tagline="Client Portal · Loading please wait..."
-          tips={[
-            "Revving up the engines...",
-            "Checking vehicle availability...",
-            "Syncing your account data...",
-            "Almost there! Hang tight...",
-          ]}
-          duration={3000}
-        />
-      );
-    }
+    return (
+      <LoadingPage
+        onComplete={handleLoadingComplete}
+        brand="SSK TRUCKING"
+        tagline="Client Portal · Loading please wait..."
+        tips={[
+          "Revving up the engines...",
+          "Checking vehicle availability...",
+          "Syncing your account data...",
+          "Almost there! Hang tight...",
+        ]}
+        duration={3000}
+      />
+    );
+  }
 
   return (
     <div>

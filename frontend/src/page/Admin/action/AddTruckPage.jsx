@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUserAuth } from '../../../hooks/useUserAuth';
 import { useToast } from '../../../context/ToastContext';
+import { useNotif } from "@/context/NotificationContext";
 
 export default function AddTruckPage() {
   const navigate = useNavigate();
   const { accessToken } = useUserAuth();
   const { showToast } = useToast();
+  const { sendUpdate } = useNotif();
   
   const [formData, setFormData] = useState({
     brand: '',
@@ -45,7 +47,7 @@ export default function AddTruckPage() {
         submitData.append(key, formData[key]);
       });
 
-      const res = await fetch('/api/truck/addVehicle', {
+      const res = await fetch('/api/truck/addTruck', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${accessToken}`
@@ -57,11 +59,12 @@ export default function AddTruckPage() {
       const result = await res.json();
       
       if (!result.success) {
-        showToast('error', 'SSK-TRUCKING', result.message);
+        showToast('error', 'SSK-TRUCKING', "Failed To Add Truck");
         return;
       }
       
       showToast('success', 'SSK-TRUCKING', 'Truck added successfully!');
+      sendUpdate();
       navigate('/admin/vehicles');
     } catch (error) {
       console.error('AddTruck ERROR:', error);
@@ -87,7 +90,7 @@ export default function AddTruckPage() {
   return (
     <>
       <div className="page-header">
-        <h1 className="page-title"><span></span>Add New Truck</h1>
+        <h1 className="page-title" style={{color: "yellow"}}><span></span>Add New Truck</h1>
       </div>
 
       <form className="add-panel" onSubmit={handleSubmit}>

@@ -56,7 +56,7 @@ export default function WarningPage({
         <div className="warn-actions">
           <button className="btn-warn-secondary">
           
-             <a href='http://192.168.100.90:3000/login' style={{textDecoration: "none"}}>
+             <a href={`${import.meta.env.VITE_API_FRONTEND}/login`} style={{textDecoration: "none"}}>
               ← Log-In
              </a>
            

@@ -192,7 +192,7 @@ export default function NotificationPanel({
 
         {/* Tabs */}
         <div style={{ display: 'flex', borderBottom: '1px solid #e2e8f0', padding: '0 20px' }}>
-          {['requests', 'system'].map(tab => (
+          {['requests'].map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}

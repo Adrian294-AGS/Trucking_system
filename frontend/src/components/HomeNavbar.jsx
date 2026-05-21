@@ -4,9 +4,13 @@ import truckingLogo from "@/assets/ssk_trucking_white.png";
 import ProfilePanel from "./ProfilePanel";
 import NotificationBell from "./NotificationBell";
 import { useNotifBell } from "../context/NotificationInfoContext";
+import { useUserAuth } from "../hooks/useUserAuth";
+import { useToast } from "../context/ToastContext";
 
 export default function HomeNavbar({ user }) {
   const location = useLocation();
+  const { accessToken } = useUserAuth();
+  const { showToast } = useToast();
   const { notifications, setNotifications } = useNotifBell();
   const [active, setActive]       = useState("");
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -14,8 +18,7 @@ export default function HomeNavbar({ user }) {
 
   useEffect(() => {
     const path = location.pathname;
-    if (path.includes("/trucks"))       setActive("trucks");
-    else if (path.includes("/contact")) setActive("contact");
+    if (path.includes("/trucks"))    setActive("trucks");
     else if(path.includes("/home"))  setActive("home");
     else setActive("");
   }, [location]);
@@ -27,12 +30,28 @@ export default function HomeNavbar({ user }) {
   const navItems = [
     { id: "trucks",  label: "Trucks",     path: "/trucks" },
     { id: "home",    label: "Home",       path: "/home" },
-    { id: "contact", label: "Contact us", path: "/contact" },
   ];
 
   // Mark ALL notifications as read — uses isRead field to match DB column
-  function handleMarkAllRead() {
+  async function handleMarkAllRead() {
     setNotifications(prev => prev.map(n => ({ ...n, isRead: 1 })));
+    try {
+      const res = await fetch("/api/user/markAllNotif", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        },
+        credentials: "include"
+      });
+
+      const result = await res.json();
+      if(!result.success){
+        showToast("error", 'SSK-TRUCKING', "Mark All As Read Is failed");
+        return;
+      }
+    } catch (error) {
+      console.log("handleAllMArke ERROR: ", error);
+    }
   }
 
   // Mark ONE notification as read — matches by notif_id (DB primary key)
@@ -45,7 +64,7 @@ export default function HomeNavbar({ user }) {
   return (
     <>
       <nav className="navbar">
-        <Link to="/" className="logo">
+        <Link to="" className="logo">
           <div className="logo-icon">
             <img src={truckingLogo} alt="SSK Logo" className="nav-logo-img" />
           </div>

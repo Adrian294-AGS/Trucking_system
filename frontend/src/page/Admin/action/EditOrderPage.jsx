@@ -50,9 +50,9 @@ export default function EditOrderPage() {
 
       sendOrderUpdate(
         state.username,
-        `${state.username} ${formData.status} Order`,
+        `${state.username} your Order has set to ${formData.status} by the Admin`,
         state.UID,
-        formData.status
+        formData.status,
       );
 
       setFormData((prev) => ({ ...prev }));

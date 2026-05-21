@@ -3657,3 +3657,70 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── FILTER TABS FOR VEHICLE LIST ── */
+.filter-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filter-tab {
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border: 1.5px solid var(--border);
+  background: var(--navy2);
+  color: var(--gray);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-transform: uppercase;
+}
+
+.filter-tab:hover {
+  border-color: var(--accent);
+  color: var(--white);
+}
+
+.filter-tab.active {
+  background: var(--accent);
+  color: var(--navy);
+  border-color: var(--accent);
+  font-weight: 700;
+}
+
+.empty-row {
+  text-align: center;
+  padding: 24px !important;
+  color: var(--gray);
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .filter-tabs {
+    gap: 6px;
+  }
+  .filter-tab {
+    padding: 5px 12px;
+    font-size: 11px;
+  }
+}
+
+.status.reserved {
+  background: #d6ddef;
+  color: #1a4a7a;
+}
+.status.reserved::before { background: #1a4a7a; }
+
+.status.reserved {
+  background: #d6ddef;
+  color: #1a4a7a;
+}
+.status.reserved::before { 
+  background: #1a4a7a; 
+}

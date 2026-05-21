@@ -13,6 +13,7 @@ truckRoute.get("/getOrders", jwtUserAuthenticator, getOrders);
 truckRoute.delete("/deleteOrder", jwtUserAuthenticator, deleteOrder);
 truckRoute.put("/editVehicle", jwtUserAuthenticator, editTruck);
 truckRoute.delete("/deleteTruck/:truck_id", jwtUserAuthenticator, deleteTruck);
-truckRoute.post("addTruck", jwtUserAuthenticator, upload.single('photo'), addTruck);
+truckRoute.post("/addTruck", jwtUserAuthenticator, upload.single('photo'), addTruck);
+
 export default truckRoute;
 

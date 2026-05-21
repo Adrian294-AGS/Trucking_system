@@ -69,7 +69,7 @@ export default function UserLogPage() {
             <tr>
               <th>UID</th>
               <th>Email</th>
-              <th>Role</th>
+              <th>Truck Info</th>
               <th>Date & Time</th>
               <th>Action</th>
               <th>Status</th>
@@ -87,7 +87,7 @@ export default function UserLogPage() {
                 <tr key={id}>
                   <td>{log.UID}</td>
                   <td>{log.email}</td>
-                  <td>{log.role}</td>
+                  <td>{log.truck_info}</td>
                   <td>{log.Created_at == "Today" ? log.Created_at : formatTimestamp(log.Created_at)}</td>
                   <td>{log.action}</td>
                   <td>

@@ -5,7 +5,8 @@ import {
   updateTruck,
   isAlreadyInTransac,
   fetchAllRelatedTruckToUser,
-  deleteVehicle
+  deleteVehicle,
+  insertToUserLog
 } from "../model/sqlQuery.js";
 
 // fetching all trucks for the preview page
@@ -46,8 +47,10 @@ export const fetchAvailableTrucks = async (req, res) => {
 
 export const rentTruck = async (req, res) => {
   const { UID } = req.user;
-  const { truck_id, pickup_date, return_date, pickup_location, notes } =
+  const { truck_id, pickup_date, return_date, pickup_location, notes, houseNumber, barangay, streetNumber, brand, plateNumber } =
     req.body;
+
+  const fullPickUpLocation = `${barangay}, ${houseNumber}, ${streetNumber}`;
   try {
     const isReserved = await isAlreadyInTransac(truck_id);
     if (isReserved.length > 0)
@@ -69,7 +72,7 @@ export const rentTruck = async (req, res) => {
       pickup_date: pickup_date,
       return_date: return_date,
       status: "Pending",
-      pickup_location: pickup_location,
+      pickup_location: fullPickUpLocation,
       note: notes,
     };
 
@@ -136,7 +139,7 @@ export const deleteTruck = async (req, res) => {
   try {
     const isDelete = await deleteVehicle(truck_id);
     if(!isDelete) return res.status(202).json({ success: false, message: "DELETE Failed" });
-    return res.status(200).json({success: false, message: "Successfully Deleted"});
+    return res.status(200).json({success: true, message: "Successfully Deleted"});
   } catch (error) {
     console.log("Delete Truck ERROR: ", error);
     return res.status(500).json({ success: false, message: "SERVER ERROR" });
@@ -146,7 +149,6 @@ export const deleteTruck = async (req, res) => {
 export const addTruck = async (req, res) => {
   const truckPhoto = req.file.filename;
   const { brand, plateNumber, truckType, status, year, fuelType } = req.body;
-
   try {
     const input = {
       model: brand,
@@ -161,7 +163,8 @@ export const addTruck = async (req, res) => {
       status
     };
     const result = await insertToDatabase("tbl_truck", input);
-    if(!result) return res.status()
+    if(!result) return res.status(202).json({success:false});
+    return res.status(200).json({success: true});
   } catch (error) {
     console.log("addTruck ERROR: ", error);
     return res.status(500).json({ success: false, message: "SERVER ERROR" });

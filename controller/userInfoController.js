@@ -1,4 +1,4 @@
-import { fetchUserInfo, retrieveNotif } from "../model/sqlQuery.js";
+import { fetchUserInfo, retrieveNotif, updateNotif, updateAllNotif } from "../model/sqlQuery.js";
 
 // getting user info
 export const userInfo = async (req, res) => {
@@ -41,3 +41,29 @@ export const getNotif = async (req, res) => {
     return res.status(500).json({success: false, message: "SERVER ERROR"});
   }
 };
+
+export const markRead = async (req, res) => {
+  const { notif_id } = req.params;
+  try {
+    const result = await updateNotif({isRead: 1}, notif_id);
+    if(!result) return res.status(202).json({success: false});
+    return res.status(200).json({success: true});
+  } catch (error) {
+    console.log("markRead ERROR: ", error);
+    return res.status(500).json({success: false, message: "SERVER ERROR"});
+  }
+}
+
+export const markAllAsRead = async (req, res) => {
+  const { UID } = req.user;
+  try {
+    const result = await updateAllNotif(UID);
+    if(!result){
+      return res.status(202).json({success: false});
+    }
+    return res.status(200).json({success: true});
+  } catch (error) {
+    console.log("markRead ERROR: ", error);
+    return res.status(500).json({success: false, message: "SERVER ERROR"});
+  }
+}

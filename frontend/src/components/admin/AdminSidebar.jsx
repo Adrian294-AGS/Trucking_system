@@ -5,7 +5,7 @@ export default function AdminSidebar() {
   const location = useLocation();
   
   const sidebarLinks = [
-    { id: 'add-truck', label: 'Add Product', path: '/admin/add-truck' },
+    { id: 'add-truck', label: 'Add Product', path: '/admin/addVehicle' },
     { id: 'vehicles', label: 'Vehicles', path: '/admin/vehicles' },
     { id: 'orders', label: 'Orders', path: '/admin/orders' },
     { id: 'userlog', label: 'User Log', path: '/admin/userlog' }

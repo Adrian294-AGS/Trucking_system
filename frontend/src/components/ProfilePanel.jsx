@@ -109,14 +109,6 @@ export default function ProfilePanel({ isOpen, onClose, user }) {
               <div className="info-value">{user?.phone || "—"}</div>
             </div>
           </div>
-
-          <div className="panel-info-item">
-            <span className="info-icon">📍</span>
-            <div>
-              <div className="info-label">Address</div>
-              <div className="info-value">{user?.address || "—"}</div>
-            </div>
-          </div>
         </div>
 
         <div className="panel-actions">

@@ -3,7 +3,7 @@ import { useState } from "react";
 import "@/assets/style/rentPage.css";
 import HomeNavbar from "../components/HomeNavbar";
 import { useUserAuth } from "../hooks/useUserAuth";
-import { useNavigate, useLocation, data } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import LoadingPage from "../components/LoadingPage";
 import { useNotif } from "../context/NotificationContext";
 import { useToast } from "../context/ToastContext";
@@ -22,6 +22,13 @@ export default function RentPage() {
     pickup_location: "",
     notes: "",
   });
+
+  const [infoPickUp, setInfoPickUp] = useState({
+    houseNumber: "",
+    barangay: "",
+    streetNumber: ""
+  });
+  
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -31,6 +38,21 @@ export default function RentPage() {
       ...prev,
       [e.target.name]: e.target.value,
     }));
+  };
+
+  // ── NEW: Handle infoPickUp changes with validation ──
+  const handleInfoPick = (e) => {
+    const { name, value } = e.target;
+    
+    // Validate: only allow letters, numbers, spaces, and basic punctuation
+    const isValid = /^[a-zA-Z0-9\s.,#/-]*$/.test(value);
+    
+    if (isValid || value === "") {
+      setInfoPickUp((prev) => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const validateDates = () => {
@@ -44,11 +66,31 @@ export default function RentPage() {
       setError("Return date must be on or after pickup date.");
       return false;
     } else if (pickup < now) {
-      setError("PickUp date must be on or after todys date.");
+      setError("PickUp date must be on or after todays date.");
       return false;
     } else {
       return true;
     }
+  };
+
+  // ── NEW: Validate pickup info fields ──
+  const validatePickupInfo = () => {
+    const { houseNumber, barangay, streetNumber } = infoPickUp;
+    
+    // Check if required fields are filled
+    if (!houseNumber || !barangay) {
+      setError("House Number and Barangay are required.");
+      return false;
+    }
+    
+    // Validate format: alphanumeric + basic punctuation only
+    const validPattern = /^[a-zA-Z0-9\s.,#/-]+$/;
+    if (!validPattern.test(houseNumber) || !validPattern.test(barangay) || (streetNumber && !validPattern.test(streetNumber))) {
+      setError("Please use only letters, numbers, and basic punctuation (., #, /, -).");
+      return false;
+    }
+    
+    return true;
   };
 
   const handleSubmit = async (e) => {
@@ -56,13 +98,24 @@ export default function RentPage() {
     setError("");
     setSuccess("");
 
-
     if (!validateDates()) {
-      sendUserLog("Rent", "Failed");
+      sendUserLog("Rent", "Failed", `${truck_brand}`, `${truck_plate}`);
+      return;
+    }
+    
+    // ── NEW: Validate pickup info before submit ──
+    if (!validatePickupInfo()) {
+      sendUserLog("Rent", "Failed", `${truck_brand}`, `${truck_plate}`);
       return;
     }
 
     formData.truck_id = truck_id;
+    // ── NEW: Attach pickup info to form data ──
+    formData.houseNumber = infoPickUp.houseNumber;
+    formData.barangay = infoPickUp.barangay;
+    formData.streetNumber = infoPickUp.streetNumber;
+    formData.brand = truck_brand;
+    formData.plateNumber = truck_plate;
 
     try {
       const res = await fetch("/api/truck/rentTruck", {
@@ -86,7 +139,7 @@ export default function RentPage() {
           notes: "",
         });
 
-        await sendUserLog("Rent", "Failed");
+        await sendUserLog("Rent", "Failed", `${truck_brand}`, `${truck_plate}`);
         navigate(-1);
         return;
       }
@@ -102,7 +155,7 @@ export default function RentPage() {
         "SSK-TRUCKING",
         "Please wait for Admin Approval, Thank you.",
       );
-      await sendUserLog("Rent", "Success");
+      await sendUserLog("Rent", "Success", `${truck_brand}`, `${truck_plate}`);
       setIsLoading(true);
       sendUpdate();
     } catch (err) {
@@ -221,17 +274,51 @@ export default function RentPage() {
                   </div>
                 </div>
 
+                {/* ── NEW: Pickup Info Fields ── */}
                 <div className="field">
-                  <label htmlFor="pickup-location">Pickup Location</label>
+                  <label htmlFor="houseNumber">House Number</label>
                   <input
                     type="text"
-                    id="pickup-location"
-                    name="pickup_location"
+                    id="houseNumber"
+                    name="houseNumber"
                     className="location-input"
-                    placeholder="Enter Address"
-                    value={formData.pickup_location}
-                    onChange={handleChange}
+                    placeholder="e.g. 123 or 12-A"
+                    value={infoPickUp.houseNumber}
+                    onChange={handleInfoPick}
+                    pattern="[a-zA-Z0-9\s.,#/-]*"
+                    title="Only letters, numbers, and basic punctuation allowed"
                     required
+                  />
+                </div>
+
+                <div className="field">
+                  <label htmlFor="barangay">Barangay</label>
+                  <input
+                    type="text"
+                    id="barangay"
+                    name="barangay"
+                    className="location-input"
+                    placeholder="e.g. Barangay San Jose"
+                    value={infoPickUp.barangay}
+                    onChange={handleInfoPick}
+                    pattern="[a-zA-Z0-9\s.,#/-]*"
+                    title="Only letters, numbers, and basic punctuation allowed"
+                    required
+                  />
+                </div>
+
+                <div className="field">
+                  <label htmlFor="streetNumber">Street Number (Optional)</label>
+                  <input
+                    type="text"
+                    id="streetNumber"
+                    name="streetNumber"
+                    className="location-input"
+                    placeholder="e.g. Street 5 or Block 3"
+                    value={infoPickUp.streetNumber}
+                    onChange={handleInfoPick}
+                    pattern="[a-zA-Z0-9\s.,#/-]*"
+                    title="Only letters, numbers, and basic punctuation allowed"
                   />
                 </div>
 

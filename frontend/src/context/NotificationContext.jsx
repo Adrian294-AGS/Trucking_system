@@ -13,14 +13,12 @@ export default function NotificationContext({ children }) {
   const [update, setUpdate] = useState(false);
   const [userLogUpdate, setUserLogUpdate] = useState(false);
   const [userLogInfo, setUserLogInfo] = useState(null);
- 
 
   useEffect(() => {
     if (!user) return;
     setUserLogInfo({
       UID: user.UID,
       email: user.email,
-      role: user.role,
     });
   }, [user]);
 
@@ -33,8 +31,8 @@ export default function NotificationContext({ children }) {
 
     socket.on("update", handleUpdate);
 
-    const handleOrderUpdate = ({ message, notifInfo }) => {
-      showToast("success", "Order 🧺", message);
+    const handleOrderUpdate = ({ message }) => {
+      showToast("success", "SSK-TRUCKING", message);
       setUpdate((prev) => !prev);
     };
 
@@ -62,22 +60,30 @@ export default function NotificationContext({ children }) {
 
   const sendOrderUpdate = async (id, message, UID, status) => {
     if (!socket) return;
+
     const notifInfo = {
       UID: UID,
       text: message,
       type: "request",
       tag: status.toUpperCase(),
-      tagType: status.toLowerCase()
+      tagType: status.toLowerCase(),
     };
     socket.emit("order:update", { id, message, notifInfo });
   };
 
-  const sendUserLog = async (action, status) => {
+  const sendDeleteOrder = async (message) => {
+    if (!socket) return;
+  
+    socket.emit("order:delete", {message});
+  };
+
+  const sendUserLog = async (action, status, brand, plateNumber) => {
     if (!socket || !userLogInfo?.UID) return;
     const date = new Date();
     const updateLog = {
       ...userLogInfo,
       Created_at: date.toLocaleString(),
+      truck_info: `${brand} - ${plateNumber}` || null, 
       action: action,
       status: status,
     };
@@ -94,6 +100,7 @@ export default function NotificationContext({ children }) {
         sendUserLog,
         userLogUpdate,
         userLogInfo,
+        sendDeleteOrder
       }}
     >
       {children}

@@ -20,6 +20,7 @@ import VehicleListPage from "./page/Admin/VehicleListPage";
 import DashboardPage from "./page/Admin/DashboardPage";
 import UserLogPage from "./page/Admin/UserLogPage";
 import EditTruckPage from "./page/Admin/action/EditTruckPage";
+import AddTruckPage from "./page/Admin/action/AddTruckPage";
 
 const ProtectedRoute = ({ children, allowedRole }) => {
   const { user, authLoading, logout } = useUserAuth(); // ✅ grab authLoading
@@ -63,15 +64,11 @@ function App() {
   return (
     <>
       <div
-        style={{ height: "100vh", display: "flex", flexDirection: "column" }}
+
       >
         <BrowserRouter>
           <div
-            style={{
-              flex: 1,
-              overflowY: "auto",
-              scrollbarWidth: "none",
-            }}
+           
           >
             <Routes>
               {/* Client Routes */}
@@ -107,6 +104,9 @@ function App() {
                 </ProtectedRoute>} />
                 <Route path="editVehicle" element={<ProtectedRoute allowedRole={"Admin"}>
                   <EditTruckPage />
+                </ProtectedRoute>} />
+                <Route path="addVehicle" element={<ProtectedRoute allowedRole={"Admin"}>
+                  <AddTruckPage />
                 </ProtectedRoute>} />
               </Route>
             </Routes>

@@ -111,6 +111,16 @@ export const updateTruck = async (table, input, id) => {
   return result;
 };
 
+export const updateNotif = async (input, id) => {
+  const [result] = await db.query("UPDATE tbl_notif SET ? WHERE notif_id = ?", [input, id]);
+  return result;
+};
+
+export const updateAllNotif = async (params) => {
+  const [result] = await db.query("UPDATE tbl_notif SET isRead = 1 WHERE UID = ?", [params]); 
+  return result;
+}
+
 // For logs operation
 
 export const insertToUserLog = async (input) => {
@@ -120,7 +130,7 @@ export const insertToUserLog = async (input) => {
 
 export const fetchUserLogs = async () => {
   const [result] = await db.query(
-    `SELECT UID, email, role, Created_at, action, status FROM tbl_logs ORDER BY Created_at DESC Limit 20`,
+    `SELECT UID, email, truck_info, Created_at, action, status FROM tbl_logs ORDER BY Created_at DESC Limit 20`,
   );
   return result;
 };
@@ -128,7 +138,7 @@ export const fetchUserLogs = async () => {
 // Admin Actions
 export const fetchOrders = async () => {
   const [result] = await db.query(
-    "SELECT A.username, A.UID, B.trip_id, C.truck_id, C.model, C.photo_url, D.transac_id, D.pickup_date, D.return_date, D.pickup_location, D.note, D.amount, D.status FROM tbl_users AS A JOIN tbl_trip AS B ON A.UID = B.UID JOIN tbl_truck AS C ON B.truck_id = C.truck_id JOIN tbl_transaction AS D ON B.trip_id = D.trip_id",
+    "SELECT A.username, A.UID, B.trip_id, C.truck_id, C.model, C.photo_url, C.plate_number, D.transac_id, D.pickup_date, D.return_date, D.pickup_location, D.note, D.amount, D.status FROM tbl_users AS A JOIN tbl_trip AS B ON A.UID = B.UID JOIN tbl_truck AS C ON B.truck_id = C.truck_id JOIN tbl_transaction AS D ON B.trip_id = D.trip_id",
   );
   return result;
 };

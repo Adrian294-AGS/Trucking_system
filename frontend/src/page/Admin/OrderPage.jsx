@@ -8,7 +8,7 @@ import { useNotif } from "../../context/NotificationContext";
 
 export default function OrdersPage() {
   const navigate = useNavigate();
-  const { update, sendUpdate } = useNotif();
+  const { update, sendDeleteOrder } = useNotif();
   const { showToast } = useToast();
   const { accessToken, authLoading } = useUserAuth();
   const [order, setOrder] = useState([]);
@@ -21,26 +21,29 @@ export default function OrdersPage() {
       day: "numeric",
     });
 
-  const handleDelete = async (trip_id, truck_id) => {
-    try {
-      const res = await fetch("/api/admin/deleteOrder", {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json"
-        },
-        credentials: "include",
-        body: JSON.stringify({trip_id, truck_id})
-      });
-      const result = await res.json();
-      if(!result.success) return showToast("warning", "Admin Orders", result.message);
-      sendUpdate();
-      showToast("info", "Admin Orders", result.message);
-      setChange((prev) => !prev);
-    } catch (error) {
-      console.log("Hande Delete ERROR: ", error);
+  const handleDelete = async (trip_id, truck_id, model, plate) => {
+    if (window.confirm("Are you sure you want to delete this truck?")) {
+      try {
+        const res = await fetch("/api/admin/deleteOrder", {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ trip_id, truck_id }),
+        });
+        const result = await res.json();
+        if (!result.success)
+          return showToast("warning", "Admin Orders", result.message);
+        sendDeleteOrder(`${model}-${plate} is Now Available to rent`);
+        showToast("info", "Admin Orders", result.message);
+        setChange((prev) => !prev);
+      } catch (error) {
+        console.log("Hande Delete ERROR: ", error);
+      }
     }
-  }
+  };
 
   if (!accessToken) return <WarningPage />;
   useEffect(() => {
@@ -69,11 +72,7 @@ export default function OrdersPage() {
         <h1 className="admin-page-title">
           <span></span>Rental Orders
         </h1>
-        <Link
-          to="/admin/add-order"
-          className="btn-edit"
-          style={{ padding: "8px 16px" }}
-        >
+        <Link to="/trucks" className="btn-edit" style={{ padding: "8px 16px" }}>
           + Add Order
         </Link>
       </div>
@@ -123,7 +122,7 @@ export default function OrdersPage() {
                             note: t.note,
                             photo: t.photo_url,
                             transac_id: t.transac_id,
-                            amount: t.amount
+                            amount: t.amount,
                           },
                         })
                       }
@@ -131,7 +130,19 @@ export default function OrdersPage() {
                       Edit
                     </button>
                     {t.status === "Complete" && (
-                      <button className="btn-edit" onClick={() => handleDelete(t.trip_id, t.truck_id)}>Delete 🗑️</button>
+                      <button
+                        className="btn-edit"
+                        onClick={() =>
+                          handleDelete(
+                            t.trip_id,
+                            t.truck_id,
+                            t.model,
+                            t.plate_number,
+                          )
+                        }
+                      >
+                        Delete 🗑️
+                      </button>
                     )}
                   </div>
                 </td>
